@@ -5,8 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import particleman.entities.EntityParticleControllable;
 import particleman.items.ItemParticleGlove;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -35,7 +37,7 @@ public class CommonProxy implements IGuiHandler
         
         //TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
         
-    	//EntityRegistry.registerModEntity(EntityScent.class, "EntityScent", entityId++, pMod, 32, 20, false);
+    	EntityRegistry.registerModEntity(EntityParticleControllable.class, "EntityParticleControllable", entityId++, pMod, 32, 20, false);
     	
     }
 
