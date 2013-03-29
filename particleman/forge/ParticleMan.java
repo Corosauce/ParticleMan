@@ -2,6 +2,7 @@ package particleman.forge;
 
 import java.util.logging.Level;
 
+import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -31,6 +32,8 @@ public class ParticleMan {
     public static CommonProxy proxy;
     
     int itemIDStart = 3242;
+    
+    public static Item itemGlove;
 
     public ParticleMan() {
     	

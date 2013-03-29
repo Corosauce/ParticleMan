@@ -1,8 +1,14 @@
 package particleman.forge;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import particleman.items.ItemParticleGlove;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -18,6 +24,15 @@ public class CommonProxy implements IGuiHandler
     public void init(ParticleMan pMod)
     {
         mod = pMod;
+        
+        pMod.itemGlove = (new ItemParticleGlove(pMod.itemIDStart)).setUnlocalizedName("ParticleMan:particleglove");
+        
+        LanguageRegistry.addName(pMod.itemGlove, "Particle Glove");
+        GameRegistry.addRecipe(new ItemStack(pMod.itemGlove), new Object[] {
+            "X X", "DID", "X X", Character.valueOf('D'), Item.redstone, Character.valueOf('I'), Item.ingotGold, Character.valueOf('X'), Block.torchWood, Character.valueOf('D'), Item.redstone
+        });
+        
+        
         //TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
         
     	//EntityRegistry.registerModEntity(EntityScent.class, "EntityScent", entityId++, pMod, 32, 20, false);
