@@ -78,6 +78,7 @@ public class ItemParticleGlove extends Item {
 					return true;
 				}
 			}
+			return false;
 		}
 		
 		return true;

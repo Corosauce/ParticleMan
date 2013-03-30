@@ -9,8 +9,10 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import particleman.forge.ParticleMan;
 
@@ -122,15 +124,19 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         this.onGround = true;
         
         if (!worldObj.isRemote) {
-	        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox/*.addCoord(this.motionX, this.motionY, this.motionZ)*/);
+        	double size = 0.5D;
+	        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(size, size, size));
 	        
 	        for (int i = 0; entities != null && i < entities.size(); ++i)
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead) {
+	            if (var10 != null && !var10.isDead && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner) || (var10 instanceof EntityLiving && ((EntityLiving)var10).health > 0 && !(var10 instanceof EntityPlayer)))) {
 	            	Random rand = new Random();
 	            	
+	            	var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this), 10);
+	            	//setDead();
+	            	System.out.println("hit!");
 	            	//this.motionX *= (0.95F + (rand.nextFloat() * 0.05F));
 	            	//this.motionY *= rand.nextFloat();
 	            	//this.motionZ *= (0.95F + (rand.nextFloat() * 0.05F));
