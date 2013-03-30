@@ -1,12 +1,20 @@
 package particleman.entities;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
+import java.util.Random;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityParticleControllable extends Entity implements IEntityAdditionalSpawnData {
 
@@ -54,6 +62,10 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			}
 			
 			System.out.println(posX + " - " + posY + " - " + posZ);
+			
+		//Client logic
+		} else {
+			manageParticles();
 		}
 		
 		//Movement
@@ -72,6 +84,14 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         
 		
     }
+	
+	@SideOnly(Side.CLIENT)
+	public void manageParticles() {
+		Random rand = new Random();
+		EntityFX entFX = new EntityFlameFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * 0.1F, (rand.nextFloat()-rand.nextFloat()) * 0.1F, (rand.nextFloat()-rand.nextFloat()) * 0.1F);
+		
+		Minecraft.getMinecraft().effectRenderer.addEffect(entFX);
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbttagcompound) {
