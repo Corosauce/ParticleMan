@@ -60,7 +60,7 @@ public class ItemParticleGlove extends Item {
 				if (particle == null || particle.isDead) {
 					playerParticles.get(player.username).remove(particle);
 				} else {
-					ParticleMan.spinAround(particle, player, 10F, 0.5F, 2F, particle.index, 0.02F);
+					ParticleMan.spinAround(particle, player, 10F, 0.0F, 2F, particle.index, 0.02F);
 					particle.decayTime = 0;
 				}
 			}
