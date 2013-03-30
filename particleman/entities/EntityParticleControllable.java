@@ -68,7 +68,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				setDead();
 			}
 			
-			System.out.println(posX + " - " + posY + " - " + posZ);
+			//System.out.println(posX + " - " + posY + " - " + posZ);
 			
 		//Client logic
 		} else {
@@ -126,6 +126,10 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		        particle.motionZ = vecZ / var9 * speed;
 			}
 		}
+	}
+	
+	public void spinAround(Entity center, float angleRate, float radius) {
+		
 	}
 
 	@Override
