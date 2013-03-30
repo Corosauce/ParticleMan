@@ -31,17 +31,18 @@ public class ItemParticleGlove extends Item {
 		if (playerParticles.get(player.username).size() > 0) {
 			EntityParticleControllable particle = playerParticles.get(player.username).get(0);
 			playerParticles.get(player.username).remove(particle);
+			playerParticles.get(player.username).add(particle);
 			
-			particle.state = 1;
+			//particle.state = 1;
 			
-			float speed = 0.1F;
-			float look = -90F;
+			float speed = 0.8F;
+			float look = 0F;
 	    	
-	    	double vecX = particle.posX + ((double)(-Math.sin((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F)) * speed);
-	    	double vecY = particle.posY - 0.5D + (-Math.sin(player.rotationPitch / 180.0F * 3.1415927F) * speed);
-	    	double vecZ = particle.posZ + ((double)(Math.cos((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F)) * speed);
+	    	double vecX = (double)(-Math.sin((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F));
+	    	double vecY = -Math.sin(player.rotationPitch / 180.0F * 3.1415927F);
+	    	double vecZ = (double)(Math.cos((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F));
 	        
-	        double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+	        //double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
 	        particle.motionX += vecX * speed;
 	        particle.motionY += vecY * speed;
 	        particle.motionZ += vecZ * speed;

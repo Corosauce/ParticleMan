@@ -72,12 +72,32 @@ public class ParticleMan {
 	        /*source.posX = x;
 	        source.posY = y;
 	        source.posZ = z;*/
-	        source.motionX *= 0.8F;
+	        /*source.motionX *= 0.8F;
 	        source.motionY *= 0.8F;
 	        source.motionZ *= 0.8F;
-	        source.setPosition(x, y, z);
+	        source.setPosition(x, y, z);*/
 	        
-	        if (source.motionX < -1F) System.out.println(source.motionX);
+	        float speed2 = 0.05F;
+	    	
+	    	double vecX = x - source.posX;
+	    	double vecY = y - source.posY;
+	    	double vecZ = z - source.posZ;
+	        
+	        double dist2 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+	        source.motionX += vecX / dist2 * speed2;
+	        source.motionY += vecY / dist2 * speed2;
+	        source.motionZ += vecZ / dist2 * speed2;
+	        
+	        if (dist2 < 1D) {
+	        	source.motionX *= 0.8F;
+		        source.motionY *= 0.8F;
+		        source.motionZ *= 0.8F;
+	        } else {
+	        	source.motionX *= 0.98F;
+		        source.motionY *= 0.98F;
+		        source.motionZ *= 0.98F;
+	        }
+	        
     	} else if (mode == 1) {
     		double adjAngle = 40D;
     		double dist = 1.5D;
@@ -92,7 +112,7 @@ public class ParticleMan {
     		
     		double speedThreshold = 0.3F;
     		
-    		if (source.getDistance(newX, newY, newZ) < 4F) {
+    		if (source.getDistance(newX, newY, newZ) < 2F) {
     			speedThreshold = 0.2F;
     		} else {
     			angle -= 5D;
@@ -118,7 +138,6 @@ public class ParticleMan {
 	        
 	        
     	}
-        
         
         
         
