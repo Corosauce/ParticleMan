@@ -94,16 +94,16 @@ public class ParticleMan {
 	        	source.motionX *= 0.8F;
 		        source.motionY *= 0.8F;
 		        source.motionZ *= 0.8F;
+	        } else if (dist2 > 10D) {
+	        	source.setPosition(center.posX, center.posY + 0.68, center.posZ);
+	        	source.motionX = center.motionX * 0.99F;
+		        source.motionY = center.motionY * 0.99F;
+		        source.motionZ = center.motionZ * 0.99F;
 	        } else if (dist2 > 2D) {
 	        	//source.setPosition(center.posX, center.posY + 0.68, center.posZ);
 	        	source.motionX += center.motionX;
 		        source.motionY += center.motionY;
 		        source.motionZ += center.motionZ;
-	        } else if (dist2 > 5D) {
-	        	source.setPosition(center.posX, center.posY + 0.68, center.posZ);
-	        	source.motionX = 0;
-		        source.motionY = 0;
-		        source.motionZ = 0;
 	        } else {
 	        	
 	        }
@@ -128,6 +128,7 @@ public class ParticleMan {
     		
     		if (source.getDistance(newX, newY, newZ) < 2F) {
     			speedThreshold = 0.2F;
+    			speed *= 0.5D;
     		} else {
     			angle -= 10D;
     		}

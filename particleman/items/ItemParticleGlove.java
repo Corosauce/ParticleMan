@@ -28,24 +28,28 @@ public class ItemParticleGlove extends Item {
 	}
 	
 	public void shootParticle(EntityPlayer player) {
-		if (playerParticles.get(player.username).size() > 0) {
-			EntityParticleControllable particle = playerParticles.get(player.username).get(0);
-			playerParticles.get(player.username).remove(particle);
-			playerParticles.get(player.username).add(particle);
-			
-			particle.state = 1;
-			
-			float speed = 0.8F;
-			float look = 0F;
-	    	
-	    	double vecX = (double)(-Math.sin((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F));
-	    	double vecY = -Math.sin(player.rotationPitch / 180.0F * 3.1415927F);
-	    	double vecZ = (double)(Math.cos((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F));
-	        
-	        //double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
-	        particle.motionX += vecX * speed;
-	        particle.motionY += vecY * speed;
-	        particle.motionZ += vecZ * speed;
+		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
+			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
+			if (particle.getDistanceToEntity(player) < 6D) {
+				//EntityParticleControllable particle = playerParticles.get(player.username).get(0);
+				playerParticles.get(player.username).remove(particle);
+				playerParticles.get(player.username).add(particle);
+				
+				particle.state = 1;
+				
+				float speed = 0.8F;
+				float look = -2F;
+		    	
+		    	double vecX = (double)(-Math.sin((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F));
+		    	double vecY = -Math.sin(player.rotationPitch / 180.0F * 3.1415927F);
+		    	double vecZ = (double)(Math.cos((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F));
+		        
+		        //double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+		        particle.motionX += vecX * speed;
+		        particle.motionY += vecY * speed;
+		        particle.motionZ += vecZ * speed;
+		        break;
+			}
 		}
 	}
 	
