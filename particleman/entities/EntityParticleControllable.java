@@ -1,12 +1,16 @@
 package particleman.entities;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityFlameFX;
+import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -23,6 +27,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	
 	public int decayTime = 0;
 	public int decayTimeMax = 80;
+	
+	@SideOnly(Side.CLIENT)
+	public List<EntityFX> particles = new LinkedList<EntityFX>();
 	
 	public EntityParticleControllable(World par1World) {
 		super(par1World);
@@ -88,9 +95,37 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	@SideOnly(Side.CLIENT)
 	public void manageParticles() {
 		Random rand = new Random();
-		EntityFX entFX = new EntityFlameFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * 0.1F, (rand.nextFloat()-rand.nextFloat()) * 0.1F, (rand.nextFloat()-rand.nextFloat()) * 0.1F);
+		float speed = 0.05F;
+		EntityFX entFX = null;
+		if (type == 0) {
+			entFX = new EntityFlameFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+		} else if (type == 1) {
+			entFX = new EntityReddustFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+		}
 		
-		Minecraft.getMinecraft().effectRenderer.addEffect(entFX);
+		if (entFX != null) {
+			Minecraft.getMinecraft().effectRenderer.addEffect(entFX);
+			particles.add(entFX);
+		}
+		
+		for (int i = 0; i < particles.size(); i++) {
+			EntityFX particle = particles.get(i);
+			
+			if (particle == null || particle.isDead) {
+				particles.remove(particle);
+			} else {
+				speed = 0.1F;
+		    	
+		    	double vecX = posX - particle.posX;
+		    	double vecY = posY - particle.posY;
+		    	double vecZ = posZ - particle.posZ;
+		        
+		        double var9 = (double)MathHelper.sqrt_double(vecX * vecX + vecY * vecY + vecZ * vecZ);
+		        particle.motionX = vecX / var9 * speed;
+		        particle.motionY = vecY / var9 * speed;
+		        particle.motionZ = vecZ / var9 * speed;
+			}
+		}
 	}
 
 	@Override
