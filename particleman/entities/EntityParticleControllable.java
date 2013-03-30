@@ -80,7 +80,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		}
 		
 		//Movement
-		float speedSlowing = 0.98F;
+		float speedSlowing = 1F;
 		float gravity = 0F;
 		
 		this.motionX *= (double)speedSlowing;
