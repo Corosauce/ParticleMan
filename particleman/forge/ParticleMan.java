@@ -28,7 +28,7 @@ public class ParticleMan {
     /** For use in preInit ONLY */
     public Configuration config;
     
-    @SidedProxy(clientSide = "particleman.ClientProxy", serverSide = "particleman.CommonProxy")
+    @SidedProxy(clientSide = "particleman.forge.ClientProxy", serverSide = "particleman.forge.CommonProxy")
     public static CommonProxy proxy;
     
     int itemIDStart = 3242;
