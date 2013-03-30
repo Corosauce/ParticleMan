@@ -37,7 +37,7 @@ public class ItemParticleGlove extends Item {
 				if (id == Block.torchWood.blockID) {
 					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, 0);
 					particle.setPosition(par4+0.5F, par5+1.6F, par6+0.5F);
-					
+					particle.index = playerParticles.get(par2EntityPlayer.username).size();
 					playerParticles.get(par2EntityPlayer.username).add(particle);
 					par3World.spawnEntityInWorld(particle);
 				}

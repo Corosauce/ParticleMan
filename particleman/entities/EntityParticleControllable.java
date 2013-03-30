@@ -135,12 +135,14 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	
 	public void spinAround(Entity center, float angleRate, float radius) {
 		
-		float angle = (-center.rotationYaw + 65F) * 0.01745329F;
+		float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
+		float angle2 = (-center.rotationYaw + 65F + ((index*60) + worldObj.getWorldTime() % 360)) * 0.01745329F;
 		
 		float dist = 2F;
 		
 		//temp
-		radius = 0.5F;
+		radius = 1.0F;
+		angleRate = 1F;
 		
 		float angleRateRad = angleRate * 0.01745329F;
 		
@@ -149,9 +151,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		float range1 = (float) (Math.sin(((worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
         float range2 = (float) (Math.cos(((worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius); 
 		
-		posX = center.posX - ((Math.cos(angle) * range1) + (Math.cos(angle) * dist));
+		posX = center.posX - ((Math.cos(angle2) * range1) + (Math.cos(angle) * dist));
 		posY = center.posY + range2 + 1F;
-		posZ = center.posZ + ((Math.sin(angle) * range1) + (Math.sin(angle) * dist));
+		posZ = center.posZ + ((Math.sin(angle2) * range1) + (Math.sin(angle) * dist));
 		
 		motionX = 0F;
 		motionY = 0F;
