@@ -128,7 +128,7 @@ public class ParticleMan {
     		double vecZ = newZ - source.posZ;
     		
     		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI);
-    		angle += 30D;
+    		angle += 20D;
     		
     		double speedThreshold = 0.3F;
     		
@@ -139,7 +139,7 @@ public class ParticleMan {
     	        source.motionY *= 0.89F;
     	        source.motionZ *= 0.89F;
     		} else {
-    			angle -= 40D;
+    			angle -= 30D;
     		}
     		
     	

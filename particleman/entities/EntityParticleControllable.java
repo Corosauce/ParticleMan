@@ -96,7 +96,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			if (worldObj.playerEntities.size() > 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
-					ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
+					/*if (worldObj.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
 				}
 			}
 		} else {
@@ -121,6 +121,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         this.posY += this.motionY;
         this.posZ += this.motionZ;
         
+        this.setPosition(posX, posY, posZ);
+        
         this.onGround = true;
         
         if (!worldObj.isRemote) {
@@ -135,8 +137,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            	Random rand = new Random();
 	            	
 	            	var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this), 10);
-	            	//setDead();
-	            	System.out.println("hit!");
+	            	setDead();
 	            	//this.motionX *= (0.95F + (rand.nextFloat() * 0.05F));
 	            	//this.motionY *= rand.nextFloat();
 	            	//this.motionZ *= (0.95F + (rand.nextFloat() * 0.05F));

@@ -31,7 +31,6 @@ public class ItemParticleGlove extends Item {
 		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
 			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
 			if (particle.getDistanceToEntity(player) < 6D) {
-				System.out.println("shoot - " + playerParticles.get(player.username).size());
 				//EntityParticleControllable particle = playerParticles.get(player.username).get(0);
 				playerParticles.get(player.username).remove(particle);
 				playerParticles.get(player.username).add(particle);
@@ -71,7 +70,7 @@ public class ItemParticleGlove extends Item {
 				
 				if (spawnType != -1) {
 					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, spawnType);
-					particle.setPosition(par4+0.5F, par5+1.6F, par6+0.5F);
+					particle.setPosition(par4+0.5F, par5+0.6F, par6+0.5F);
 					particle.index = playerParticles.get(par2EntityPlayer.username).size();
 					playerParticles.get(par2EntityPlayer.username).add(particle);
 					par3World.spawnEntityInWorld(particle);
@@ -109,8 +108,6 @@ public class ItemParticleGlove extends Item {
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if (!par2World.isRemote) {
 			check(par3EntityPlayer.username);
-			
-			System.out.println("try");
 			shootParticle(par3EntityPlayer);
 		}
 		
