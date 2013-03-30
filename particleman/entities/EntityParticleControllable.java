@@ -4,16 +4,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import particleman.forge.ParticleMan;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import particleman.forge.ParticleMan;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -77,10 +76,16 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		//Client logic
 		} else {
 			manageParticles();
+			if (worldObj.playerEntities.size() > 0) {
+				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+				if (player != null) {
+					ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
+				}
+			}
 		}
 		
 		//Movement
-		float speedSlowing = 1F;
+		float speedSlowing = 0.98F;
 		float gravity = 0F;
 		
 		this.motionX *= (double)speedSlowing;
@@ -161,6 +166,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
     {
         data.writeInt(type);
         data.writeInt(index);
+        data.writeChars(owner);
     }
 
     @Override
@@ -168,6 +174,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
     {
         type = data.readInt();
         index = data.readInt();
+        owner = data.readLine();
     }
 
 }

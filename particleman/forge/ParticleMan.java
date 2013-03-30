@@ -81,33 +81,36 @@ public class ParticleMan {
     	} else if (mode == 1) {
     		double adjAngle = 65D;
     		double dist = 1.5D;
-    		double vecX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist) - source.posX;
-    		double vecZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist) - source.posZ;
+    		double newX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
+    		double newZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
+    		double vecX = newX - source.posX;
+    		double vecZ = newZ - source.posZ;
     		
     		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI);
-    		angle += 0D;
+    		angle += 10D;
     		
     		double speedThreshold = 0.3F;
     		
-    		if (center.getDistanceToEntity(source) < 2F) {
+    		if (source.getDistance(newX, center.posY, newZ) < 2F) {
     			speedThreshold = 0.2F;
+    		} else {
+    			angle -= 5D;
     		}
     		
     		if (Math.sqrt(source.motionX * source.motionX + source.motionZ * source.motionZ) < speedThreshold) {
-	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
+	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 0.5F;
 	    		//source.motionY += Math.sin((center.posY - source.posY * 0.01745329D)) * speed;
-	    		source.motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
-	    		
-	    		Random rand = new Random();
-	    		
-	    		if (source.posY + 0.5D > center.posY) source.motionY -= rand.nextFloat() * 0.01F;
-	    		if (source.posY - 0.5D < center.posY) source.motionY += rand.nextFloat() * 0.02F;
-	    		
+	    		source.motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed * 0.5F;
     		} else {
     			source.motionX *= 0.95F;
     	        source.motionY *= 0.95F;
     	        source.motionZ *= 0.95F;
     		}
+
+    		Random rand = new Random();
+    		if (source.posY + 0.2D > center.posY + 0.5D) source.motionY -= /*rand.nextFloat() * */0.01F;
+    		if (source.posY - 0.2D < center.posY + 0.5D) source.motionY += /*rand.nextFloat() * */0.01F;
+    		
     		//source.setPosition(source.posX, center.posY + 0.7F, source.posZ);
     		//source.posY = center.posY + 0.7F;
     		

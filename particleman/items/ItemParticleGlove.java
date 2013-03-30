@@ -50,6 +50,7 @@ public class ItemParticleGlove extends Item {
 	
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
+		//System.out.println(par5);
 		if (!par2World.isRemote && par3Entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer)par3Entity;
 			check(player.username);
