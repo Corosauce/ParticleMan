@@ -25,6 +25,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public String owner = "";
 	public int type = 0; //0 = fire, 1 = redstone
 	
+	public int index = 0;
+	
 	public int decayTime = 0;
 	public int decayTimeMax = 80;
 	
@@ -114,6 +116,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			if (particle == null || particle.isDead) {
 				particles.remove(particle);
 			} else {
+				
+				//particle.setPosition(posX, posY, posZ);
+				
 				/*speed = 0.1F;
 		    	
 		    	double vecX = posX - particle.posX;
@@ -130,18 +135,27 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	
 	public void spinAround(Entity center, float angleRate, float radius) {
 		
-		float angle = -center.rotationYaw * 0.01745329F;
+		float angle = (-center.rotationYaw + 65F) * 0.01745329F;
 		
-		float angleRateRad = angleRate * 4F * 0.01745329F;
+		float dist = 2F;
 		
-		float i = 0; //use for particleindex, to offset position
+		//temp
+		radius = 0.5F;
+		
+		float angleRateRad = angleRate * 0.01745329F;
+		
+		float i = index; //use for particleindex, to offset position
 		
 		float range1 = (float) (Math.sin(((worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
         float range2 = (float) (Math.cos(((worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius); 
 		
-		posX = center.posX - Math.cos(angle) * range1;
-		posY = center.posY + range2;
-		posZ = center.posZ + Math.sin(angle) * range1;
+		posX = center.posX - ((Math.cos(angle) * range1) + (Math.cos(angle) * dist));
+		posY = center.posY + range2 + 1F;
+		posZ = center.posZ + ((Math.sin(angle) * range1) + (Math.sin(angle) * dist));
+		
+		motionX = 0F;
+		motionY = 0F;
+		motionZ = 0F;
 		
 		decayTime = 0;
 		
@@ -166,12 +180,14 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
     public void writeSpawnData(ByteArrayDataOutput data)
     {
         data.writeInt(type);
+        data.writeInt(index);
     }
 
     @Override
     public void readSpawnData(ByteArrayDataInput data)
     {
         type = data.readInt();
+        index = data.readInt();
     }
 
 }
