@@ -33,7 +33,7 @@ public class ItemParticleGlove extends Item {
 			playerParticles.get(player.username).remove(particle);
 			playerParticles.get(player.username).add(particle);
 			
-			//particle.state = 1;
+			particle.state = 1;
 			
 			float speed = 0.8F;
 			float look = 0F;

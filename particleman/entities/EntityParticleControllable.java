@@ -32,6 +32,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public int decayTime = 0;
 	public int decayTimeMax = 80;
 	
+	public int regrabDelay = 0;
+	public int regrabDelayMax = 20;
+	
 	@SideOnly(Side.CLIENT)
 	public List<EntityFX> particles = new LinkedList<EntityFX>();
 	
@@ -90,6 +93,13 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
 					ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
+				}
+			}
+		} else {
+			if (!worldObj.isRemote) {
+				if (regrabDelay++ > regrabDelayMax) {
+					regrabDelay = 0;
+					state = 0;
 				}
 			}
 		}
