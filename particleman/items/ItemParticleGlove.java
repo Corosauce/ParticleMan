@@ -27,12 +27,30 @@ public class ItemParticleGlove extends Item {
 		if (!playerParticles.containsKey(parUser)) playerParticles.put(parUser, new LinkedList<EntityParticleControllable>());
 	}
 	
+	public void shootParticle(EntityPlayer player) {
+		if (playerParticles.get(player.username).size() > 0) {
+			EntityParticleControllable particle = playerParticles.get(player.username).get(0);
+			playerParticles.get(player.username).remove(particle);
+			
+			particle.state = 1;
+			
+			float speed = 0.1F;
+			float look = -90F;
+	    	
+	    	double vecX = particle.posX + ((double)(-Math.sin((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F)) * speed);
+	    	double vecY = particle.posY - 0.5D + (-Math.sin(player.rotationPitch / 180.0F * 3.1415927F) * speed);
+	    	double vecZ = particle.posZ + ((double)(Math.cos((player.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos(player.rotationPitch / 180.0F * 3.1415927F)) * speed);
+	        
+	        double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+	        particle.motionX += vecX * speed;
+	        particle.motionY += vecY * speed;
+	        particle.motionZ += vecZ * speed;
+		}
+	}
+	
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-		
-		System.out.println("woooop");
-		
 		if (!par3World.isRemote) {
 			check(par2EntityPlayer.username);
 			int id = par3World.getBlockId(par4, par5, par6);
@@ -81,9 +99,11 @@ public class ItemParticleGlove extends Item {
 	
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if (!par2World.isRemote) check(par3EntityPlayer.username);
-		
-		System.out.println("eeeeeee");
+		if (!par2World.isRemote) {
+			check(par3EntityPlayer.username);
+			
+			shootParticle(par3EntityPlayer);
+		}
 		
 		return par1ItemStack;
 	}

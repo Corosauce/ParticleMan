@@ -47,7 +47,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 
 	@Override
 	protected void entityInit() {
-		// TODO Auto-generated method stub
+		
+		this.dataWatcher.addObject(16, Byte.valueOf((byte)state));
 
 	}
 	
@@ -79,11 +80,17 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			manageParticles();
 			
 		}
-		
-		if (worldObj.playerEntities.size() > 0) {
-			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
-			if (player != null) {
-				ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
+		if (worldObj.isRemote) {
+			state = this.dataWatcher.getWatchableObjectByte(16);
+		} else {
+			this.dataWatcher.updateObject(16, Byte.valueOf((byte)state));
+		}
+		if (state == 0) {
+			if (worldObj.playerEntities.size() > 0) {
+				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+				if (player != null) {
+					ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
+				}
 			}
 		}
 		
