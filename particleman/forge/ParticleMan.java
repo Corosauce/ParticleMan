@@ -41,7 +41,7 @@ public class ParticleMan {
     	
     }
     
-    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index) {
+    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed) {
 		
 		float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
 		float angle2 = (-center.rotationYaw + 65F + ((index*60) + source.worldObj.getWorldTime() % 360)) * 0.01745329F;
@@ -68,20 +68,20 @@ public class ParticleMan {
         double y = center.posY + range2 + 0.8F;
         double z = center.posZ + ((Math.sin(angle2) * range1) + (Math.sin(angle) * dist));
         
-        source.posX = x;
+        /*source.posX = x;
         source.posY = y;
-        source.posZ = z;
+        source.posZ = z;*/
         
-        float speed = 0.5F;
+        //float speed = 0.02F;
     	
     	double vecX = x - source.posX;
     	double vecY = y - source.posY;
     	double vecZ = z - source.posZ;
         
         double var9 = (double)MathHelper.sqrt_double(vecX * vecX + vecY * vecY + vecZ * vecZ);
-        source.motionX = vecX / var9 * speed;
-        source.motionY = vecY / var9 * speed;
-        source.motionZ = vecZ / var9 * speed;
+        source.motionX += vecX / var9 * speed;
+        source.motionY += vecY / var9 * speed;
+        source.motionZ += vecZ / var9 * speed;
         
         /*source.motionX = 0F;
         source.motionY = 0F;

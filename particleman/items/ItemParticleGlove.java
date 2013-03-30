@@ -36,7 +36,7 @@ public class ItemParticleGlove extends Item {
 			
 			if (id != 0) {
 				if (id == Block.torchWood.blockID) {
-					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, 0);
+					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, 1);
 					particle.setPosition(par4+0.5F, par5+1.6F, par6+0.5F);
 					particle.index = playerParticles.get(par2EntityPlayer.username).size();
 					playerParticles.get(par2EntityPlayer.username).add(particle);
@@ -60,7 +60,7 @@ public class ItemParticleGlove extends Item {
 				if (particle == null || particle.isDead) {
 					playerParticles.get(player.username).remove(particle);
 				} else {
-					ParticleMan.spinAround(particle, player, 10F, 0.0F, 2F, particle.index);
+					ParticleMan.spinAround(particle, player, 10F, 0.0F, 2F, particle.index, 0.02F);
 					particle.decayTime = 0;
 				}
 			}

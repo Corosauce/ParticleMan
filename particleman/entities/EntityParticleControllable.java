@@ -101,10 +101,15 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		Random rand = new Random();
 		float speed = 0.05F;
 		EntityFX entFX = null;
-		if (type == 0) {
-			entFX = new EntityFlameFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
-		} else if (type == 1) {
-			entFX = new EntityReddustFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+		
+		System.out.println("particles.size(): " + particles.size());
+		
+		if (particles.size() < 15) {
+			if (type == 0) {
+				entFX = new EntityFlameFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+			} else if (type == 1) {
+				entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 1F, 1F);
+			}
 		}
 		
 		if (entFX != null) {
@@ -119,7 +124,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				particles.remove(particle);
 			} else {
 				
-				ParticleMan.spinAround(particle, this, 5F, 0.5F, 0, i);
+				ParticleMan.spinAround(particle, this, 5F, 0.5F, 0, i, 0.03F);
+				
+				//particle.particleAge = 0;
 				
 				//particle.setPosition(posX, posY, posZ);
 				
