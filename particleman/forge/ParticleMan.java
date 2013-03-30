@@ -1,7 +1,12 @@
 package particleman.forge;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
+
+import particleman.entities.EntityParticleControllable;
+import particleman.items.ItemParticleGlove;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -42,7 +47,8 @@ public class ParticleMan {
     }
     
     public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int mode) {
-		
+    	Random rand = new Random();
+    	
     	if (mode == 0) {
 			float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
 			float angle2 = (-center.rotationYaw + 65F + ((index*60) + source.worldObj.getWorldTime() % 360)) * 0.01745329F;
@@ -136,6 +142,10 @@ public class ParticleMan {
     			angle -= 40D;
     		}
     		
+    	
+    		
+    		speed += (rand.nextFloat() * 0.005F);
+    		
     		if (Math.sqrt(source.motionX * source.motionX + source.motionZ * source.motionZ) < speedThreshold) {
 	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
 	    		//source.motionY += Math.sin((center.posY - source.posY * 0.01745329D)) * speed;
@@ -146,7 +156,7 @@ public class ParticleMan {
     	        source.motionZ *= 0.95F;
     		}
 
-    		Random rand = new Random();
+    		
     		if (source.posY + 0.2D > newY + 0.5D) source.motionY -= /*rand.nextFloat() * */0.01F;
     		if (source.posY - 0.2D < newY + 0.5D) source.motionY += /*rand.nextFloat() * */0.01F;
     		
@@ -199,7 +209,7 @@ public class ParticleMan {
     
     @Mod.ServerStarted
     public void serverStart(FMLServerStartedEvent event) {
-    	
+    	ItemParticleGlove.playerParticles = new HashMap<String, List<EntityParticleControllable>>();
     }
     
     @Mod.ServerStopped

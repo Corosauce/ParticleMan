@@ -131,9 +131,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            if (var10 != null && !var10.isDead) {
 	            	Random rand = new Random();
 	            	
-	            	this.motionX *= rand.nextFloat() * 0.9F;
+	            	//this.motionX *= (0.95F + (rand.nextFloat() * 0.05F));
 	            	//this.motionY *= rand.nextFloat();
-	            	this.motionZ *= rand.nextFloat() * 0.9F;
+	            	//this.motionZ *= (0.95F + (rand.nextFloat() * 0.05F));
 	            	break;
 	            }
 	            

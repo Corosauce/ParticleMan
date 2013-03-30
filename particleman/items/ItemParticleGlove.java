@@ -16,7 +16,7 @@ import particleman.forge.ParticleMan;
 
 public class ItemParticleGlove extends Item {
 
-	public HashMap<String, List<EntityParticleControllable>> playerParticles = new HashMap<String, List<EntityParticleControllable>>();
+	public static HashMap<String, List<EntityParticleControllable>> playerParticles = new HashMap<String, List<EntityParticleControllable>>();
 	
 	public ItemParticleGlove(int par1) {
 		super(par1);
@@ -31,6 +31,7 @@ public class ItemParticleGlove extends Item {
 		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
 			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
 			if (particle.getDistanceToEntity(player) < 6D) {
+				System.out.println("shoot - " + playerParticles.get(player.username).size());
 				//EntityParticleControllable particle = playerParticles.get(player.username).get(0);
 				playerParticles.get(player.username).remove(particle);
 				playerParticles.get(player.username).add(particle);
@@ -74,11 +75,12 @@ public class ItemParticleGlove extends Item {
 					particle.index = playerParticles.get(par2EntityPlayer.username).size();
 					playerParticles.get(par2EntityPlayer.username).add(particle);
 					par3World.spawnEntityInWorld(particle);
+					return true;
 				}
 			}
 		}
 		
-        return true;
+		return true;
     }
 	
 	@Override
@@ -107,6 +109,7 @@ public class ItemParticleGlove extends Item {
 		if (!par2World.isRemote) {
 			check(par3EntityPlayer.username);
 			
+			System.out.println("try");
 			shootParticle(par3EntityPlayer);
 		}
 		
