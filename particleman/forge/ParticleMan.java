@@ -68,26 +68,28 @@ public class ParticleMan {
         double y = center.posY + range2 + 0.8F;
         double z = center.posZ + ((Math.sin(angle2) * range1) + (Math.sin(angle) * dist));
         
-        /*source.posX = x;
+        source.posX = x;
         source.posY = y;
-        source.posZ = z;*/
+        source.posZ = z;
+        /*source.motionX = 0F;
+        source.motionY = 0F;
+        source.motionZ = 0F;*/
+        source.setPosition(source.posX, source.posY, source.posZ);
         
         //float speed = 0.02F;
     	
-    	double vecX = x - source.posX;
+    	/*double vecX = x - source.posX;
     	double vecY = y - source.posY;
     	double vecZ = z - source.posZ;
         
         double var9 = (double)MathHelper.sqrt_double(vecX * vecX + vecY * vecY + vecZ * vecZ);
         source.motionX += vecX / var9 * speed;
         source.motionY += vecY / var9 * speed;
-        source.motionZ += vecZ / var9 * speed;
+        source.motionZ += vecZ / var9 * speed;*/
         
-        /*source.motionX = 0F;
-        source.motionY = 0F;
-        source.motionZ = 0F;*/
+        
 		
-		//source.setPosition(source.posX, source.posY, source.posZ);
+		
 		
 		
 	}
