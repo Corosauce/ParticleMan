@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import particleman.entities.EntityParticleControllable;
+import particleman.forge.ParticleMan;
 
 public class ItemParticleGlove extends Item {
 
@@ -59,7 +60,8 @@ public class ItemParticleGlove extends Item {
 				if (particle == null || particle.isDead) {
 					playerParticles.get(player.username).remove(particle);
 				} else {
-					particle.spinAround(player, 10F, 1.5F);
+					ParticleMan.spinAround(particle, player, 10F, 0.0F, 2F, particle.index);
+					particle.decayTime = 0;
 				}
 			}
 			
