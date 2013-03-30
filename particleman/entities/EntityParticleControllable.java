@@ -124,7 +124,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				particles.remove(particle);
 			} else {
 				
-				ParticleMan.spinAround(particle, this, 10F, 0.7F, 0, i, 0.03F);
+				ParticleMan.spinAround(particle, this, 10F, 0.2F, 0, i, 0.03F);
 				
 				particle.particleAge = 0;
 				

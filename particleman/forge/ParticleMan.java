@@ -70,10 +70,10 @@ public class ParticleMan {
         
         /*source.posX = x;
         source.posY = y;
-        source.posZ = z;
-        source.motionX = 0F;
-        source.motionY = 0F;
-        source.motionZ = 0F;*/
+        source.posZ = z;*/
+        source.motionX *= 0.95F;
+        source.motionY *= 0.95F;
+        source.motionZ *= 0.95F;
         source.setPosition(x, y, z);
         
         //float speed = 0.02F;
