@@ -39,6 +39,7 @@ public class RenderParticleControllable extends Render
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.003921569F);
+        GL11.glDisable(GL11.GL_CULL_FACE);
         tessellator.startDrawingQuads();
 
         int particleTextureIndexX = 0;
@@ -56,9 +57,9 @@ public class RenderParticleControllable extends Render
         float f9 = f8 + 0.0624375F;
         float f10 = 0.5F/* 0.1F * particle.particleScale*/;
 
-        float f11 = (float)(particle.prevPosX + (particle.posX - particle.prevPosX) * (double)par2);
-        float f12 = (float)(particle.prevPosY + (particle.posY - particle.prevPosY) * (double)par2);
-        float f13 = (float)(particle.prevPosZ + (particle.posZ - particle.prevPosZ) * (double)par2);
+        float f11 = (float)(particle.prevPosX + (particle.posX - particle.prevPosX)/* * (double)par2*/);
+        float f12 = (float)(particle.prevPosY + (particle.posY - particle.prevPosY)/* * (double)par2*/);
+        float f13 = (float)(particle.prevPosZ + (particle.posZ - particle.prevPosZ)/* * (double)par2*/);
         float f14 = 1.0F;
         
         float f1 = ActiveRenderInfo.rotationX;
@@ -77,6 +78,7 @@ public class RenderParticleControllable extends Render
         tessellator.addVertexWithUV((double)(f11 + f1 * f10 - f3 * f10), (double)(f12 - f5 * f10), (double)(f13 + f2 * f10 - f4 * f10), (double)f6, (double)f9);
         
         tessellator.draw();
+        GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDepthMask(true);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);

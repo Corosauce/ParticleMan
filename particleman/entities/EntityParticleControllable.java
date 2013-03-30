@@ -1,10 +1,14 @@
 package particleman.entities;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityParticleControllable extends Entity {
+public class EntityParticleControllable extends Entity implements IEntityAdditionalSpawnData {
 
 	public String owner = "";
 	public int type = 0; //0 = fire, 1 = redstone
@@ -49,7 +53,7 @@ public class EntityParticleControllable extends Entity {
 				setDead();
 			}
 			
-			
+			System.out.println(posX + " - " + posY + " - " + posZ);
 		}
 		
 		//Movement
@@ -64,6 +68,8 @@ public class EntityParticleControllable extends Entity {
         this.posX += this.motionX;
         this.posY += this.motionY;
         this.posZ += this.motionZ;
+        
+        
 		
     }
 
@@ -78,5 +84,17 @@ public class EntityParticleControllable extends Entity {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+    public void writeSpawnData(ByteArrayDataOutput data)
+    {
+        data.writeInt(type);
+    }
+
+    @Override
+    public void readSpawnData(ByteArrayDataInput data)
+    {
+        type = data.readInt();
+    }
 
 }

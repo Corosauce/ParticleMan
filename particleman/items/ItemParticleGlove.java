@@ -1,5 +1,6 @@
 package particleman.items;
 
+import particleman.entities.EntityParticleControllable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +23,17 @@ public class ItemParticleGlove extends Item {
 			int id = par3World.getBlockId(par4, par5, par6);
 			
 			if (id != 0) {
-				System.out.println(id == Block.torchWood.blockID);
+				
+				
+				if (id == Block.torchWood.blockID) {
+					
+					System.out.println("spawning particle");
+					
+					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, 0);
+					particle.setPosition(par4+0.5F, par5+1.6F, par6+0.5F);
+					
+					par3World.spawnEntityInWorld(particle);
+				}
 			}
 		}
 		
