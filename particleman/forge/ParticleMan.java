@@ -41,40 +41,52 @@ public class ParticleMan {
     	
     }
     
-    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed) {
+    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int mode) {
 		
-		float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
-		float angle2 = (-center.rotationYaw + 65F + ((index*60) + source.worldObj.getWorldTime() % 360)) * 0.01745329F;
-		
-		float dist = distOffset;
-		
-		//temp
-		//radius = 1.0F;
-		//angleRate = 10F;
-		float angleRateY = 5F;
-		
-		float angleRateRad = angleRate * 0.01745329F;
-		
-		float i = index; //use for particleindex, to offset position
-		
-		float range1 = (float) (Math.sin(((source.worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
-        float range2 = (float) (Math.cos(((source.worldObj.getWorldTime() - (i*30.5F)) * (angleRateY * 0.01745329F))) * radius); 
-		
-        /*source.posX = ;
-        source.posY = ;
-        source.posZ = ;*/
-		
-        double x = center.posX - ((Math.cos(angle2) * range1) + (Math.cos(angle) * dist));
-        double y = center.posY + range2 + 0.8F;
-        double z = center.posZ + ((Math.sin(angle2) * range1) + (Math.sin(angle) * dist));
-        
-        /*source.posX = x;
-        source.posY = y;
-        source.posZ = z;*/
-        source.motionX *= 0.95F;
-        source.motionY *= 0.95F;
-        source.motionZ *= 0.95F;
-        source.setPosition(x, y, z);
+    	if (mode == 0) {
+			float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
+			float angle2 = (-center.rotationYaw + 65F + ((index*60) + source.worldObj.getWorldTime() % 360)) * 0.01745329F;
+			
+			float dist = distOffset;
+			
+			//temp
+			//radius = 1.0F;
+			//angleRate = 10F;
+			float angleRateY = 5F;
+			
+			float angleRateRad = angleRate * 0.01745329F;
+			
+			float i = index; //use for particleindex, to offset position
+			
+			float range1 = (float) (Math.sin(((source.worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
+	        float range2 = (float) (Math.cos(((source.worldObj.getWorldTime() - (i*30.5F)) * (angleRateY * 0.01745329F))) * radius); 
+			
+	        /*source.posX = ;
+	        source.posY = ;
+	        source.posZ = ;*/
+			
+	        double x = center.posX - ((Math.cos(angle2) * range1) + (Math.cos(angle) * dist));
+	        double y = center.posY + range2 + 0.8F;
+	        double z = center.posZ + ((Math.sin(angle2) * range1) + (Math.sin(angle) * dist));
+	        
+	        /*source.posX = x;
+	        source.posY = y;
+	        source.posZ = z;*/
+	        source.motionX *= 0.95F;
+	        source.motionY *= 0.95F;
+	        source.motionZ *= 0.95F;
+	        source.setPosition(x, y, z);
+    	} else if (mode == 1) {
+    		double vecX = center.posX - source.posX;
+    		double vecZ = center.posZ - source.posZ;
+    		
+    		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI) - 90D;
+    		//angle -= 10F;
+    		
+    		source.motionX -= Math.cos(-angle) * speed;
+    		source.motionZ += Math.sin(-angle) * speed;
+    		source.posY = center.posY + 1.5F;
+    	}
         
         //float speed = 0.02F;
     	
