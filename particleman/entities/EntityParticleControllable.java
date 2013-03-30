@@ -25,6 +25,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 
 	public String owner = "";
 	public int type = 0; //0 = fire, 1 = redstone
+	public int state = 0; //0 = being grabbed, 1 = free
 	
 	public int index = 0;
 	

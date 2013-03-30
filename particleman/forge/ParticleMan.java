@@ -79,10 +79,6 @@ public class ParticleMan {
 	        
 	        if (source.motionX < -1F) System.out.println(source.motionX);
     	} else if (mode == 1) {
-    		
-    		if (!center.worldObj.isRemote) System.out.println(center.posY);
-    		
-    		
     		double adjAngle = 40D;
     		double dist = 1.5D;
     		double newX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
@@ -123,16 +119,7 @@ public class ParticleMan {
 	        
     	}
         
-        //float speed = 0.02F;
-    	
-    	/*double vecX = x - source.posX;
-    	double vecY = y - source.posY;
-    	double vecZ = z - source.posZ;
         
-        double var9 = (double)MathHelper.sqrt_double(vecX * vecX + vecY * vecY + vecZ * vecZ);
-        source.motionX += vecX / var9 * speed;
-        source.motionY += vecY / var9 * speed;
-        source.motionZ += vecZ / var9 * speed;*/
         
         
 		

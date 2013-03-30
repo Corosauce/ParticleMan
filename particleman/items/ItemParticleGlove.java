@@ -30,13 +30,23 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
+		
+		System.out.println("woooop");
+		
 		if (!par3World.isRemote) {
 			check(par2EntityPlayer.username);
 			int id = par3World.getBlockId(par4, par5, par6);
 			
 			if (id != 0) {
+				int spawnType = -1;
 				if (id == Block.torchWood.blockID) {
-					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, 1);
+					spawnType = 0;
+				} else if (id == Block.torchRedstoneActive.blockID) {
+					spawnType = 1;
+				}
+				
+				if (spawnType != -1) {
+					EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, spawnType);
 					particle.setPosition(par4+0.5F, par5+1.6F, par6+0.5F);
 					particle.index = playerParticles.get(par2EntityPlayer.username).size();
 					playerParticles.get(par2EntityPlayer.username).add(particle);
@@ -45,7 +55,7 @@ public class ItemParticleGlove extends Item {
 			}
 		}
 		
-        return false;
+        return true;
     }
 	
 	@Override
@@ -72,6 +82,8 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if (!par2World.isRemote) check(par3EntityPlayer.username);
+		
+		System.out.println("eeeeeee");
 		
 		return par1ItemStack;
 	}
