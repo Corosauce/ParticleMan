@@ -57,7 +57,7 @@ public class ItemParticleGlove extends Item {
 			for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
 				EntityParticleControllable particle = playerParticles.get(player.username).get(i);
 				
-				if (particle == null || particle.isDead) {
+				if (particle == null || particle.isDead || par3Entity.getDistanceToEntity(particle) > 50) {
 					playerParticles.get(player.username).remove(particle);
 				} else {
 					ParticleMan.spinAround(particle, player, 10F, 0.5F, 2F, particle.index, 0.02F, 1);

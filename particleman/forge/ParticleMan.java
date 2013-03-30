@@ -77,15 +77,30 @@ public class ParticleMan {
 	        source.motionZ *= 0.95F;
 	        source.setPosition(x, y, z);
     	} else if (mode == 1) {
-    		double vecX = center.posX - source.posX;
-    		double vecZ = center.posZ - source.posZ;
+    		double adjAngle = 65D;
+    		double dist = 1.5D;
+    		double vecX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist) - source.posX;
+    		double vecZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist) - source.posZ;
     		
-    		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI) - 90D;
-    		//angle -= 10F;
+    		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI);
+    		angle += 5D;
     		
-    		source.motionX -= Math.cos(-angle) * speed;
-    		source.motionZ += Math.sin(-angle) * speed;
-    		source.posY = center.posY + 1.5F;
+    		if (Math.sqrt(source.motionX * source.motionX + source.motionZ * source.motionZ) < 0.2F) {
+	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed;
+	    		source.motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed;
+    		} else {
+    			source.motionX *= 0.95F;
+    	        source.motionY *= 0.95F;
+    	        source.motionZ *= 0.95F;
+    		}
+    		source.setPosition(source.posX, center.posY + 0.7F, source.posZ);
+    		//source.posY = center.posY + 0.7F;
+    		
+    		source.motionX *= 0.1F;
+	        source.motionY *= 0.1F;
+	        source.motionZ *= 0.1F;
+	        
+	        if (source.motionX < -1F) System.out.println(source.motionX);
     	}
         
         //float speed = 0.02F;
