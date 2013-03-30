@@ -122,21 +122,24 @@ public class ParticleMan {
     		double vecZ = newZ - source.posZ;
     		
     		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI);
-    		angle += 7D;
+    		angle += 30D;
     		
     		double speedThreshold = 0.3F;
     		
-    		if (source.getDistance(newX, newY, newZ) < 2F) {
+    		if (source.getDistance(newX, newY, newZ) < 3F) {
     			speedThreshold = 0.2F;
-    			speed *= 0.5D;
+    			//speed *= 0.5D;
+    			source.motionX *= 0.89F;
+    	        source.motionY *= 0.89F;
+    	        source.motionZ *= 0.89F;
     		} else {
-    			angle -= 10D;
+    			angle -= 40D;
     		}
     		
     		if (Math.sqrt(source.motionX * source.motionX + source.motionZ * source.motionZ) < speedThreshold) {
-	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 0.8F;
+	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
 	    		//source.motionY += Math.sin((center.posY - source.posY * 0.01745329D)) * speed;
-	    		source.motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed * 0.8F;
+	    		source.motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
     		} else {
     			source.motionX *= 0.95F;
     	        source.motionY *= 0.95F;

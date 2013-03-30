@@ -40,6 +40,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	
 	public EntityParticleControllable(World par1World) {
 		super(par1World);
+		
+		this.setSize(0.5F, 0.5F);
 	}
 	
 	public EntityParticleControllable(World par1World, String parOwner, int parType) {
@@ -118,6 +120,25 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         this.posZ += this.motionZ;
         
         this.onGround = true;
+        
+        if (!worldObj.isRemote) {
+	        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox/*.addCoord(this.motionX, this.motionY, this.motionZ)*/);
+	        
+	        for (int i = 0; entities != null && i < entities.size(); ++i)
+	        {
+	            Entity var10 = (Entity)entities.get(i);
+	            
+	            if (var10 != null && !var10.isDead) {
+	            	Random rand = new Random();
+	            	
+	            	this.motionX *= rand.nextFloat() * 0.9F;
+	            	//this.motionY *= rand.nextFloat();
+	            	this.motionZ *= rand.nextFloat() * 0.9F;
+	            	break;
+	            }
+	            
+	        }
+        }
 		
     }
 	
