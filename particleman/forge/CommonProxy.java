@@ -38,7 +38,7 @@ public class CommonProxy implements IGuiHandler
         
         //TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
         
-    	EntityRegistry.registerModEntity(EntityParticleControllable.class, "EntityParticleControllable", entityId++, pMod, 32, 20, false);
+    	EntityRegistry.registerModEntity(EntityParticleControllable.class, "EntityParticleControllable", entityId++, pMod, 32, 1, true);
     	
     }
 

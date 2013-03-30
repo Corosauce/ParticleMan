@@ -114,7 +114,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			if (particle == null || particle.isDead) {
 				particles.remove(particle);
 			} else {
-				speed = 0.1F;
+				/*speed = 0.1F;
 		    	
 		    	double vecX = posX - particle.posX;
 		    	double vecY = posY - particle.posY;
@@ -123,12 +123,30 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		        double var9 = (double)MathHelper.sqrt_double(vecX * vecX + vecY * vecY + vecZ * vecZ);
 		        particle.motionX = vecX / var9 * speed;
 		        particle.motionY = vecY / var9 * speed;
-		        particle.motionZ = vecZ / var9 * speed;
+		        particle.motionZ = vecZ / var9 * speed;*/
 			}
 		}
 	}
 	
 	public void spinAround(Entity center, float angleRate, float radius) {
+		
+		float angle = -center.rotationYaw * 0.01745329F;
+		
+		float angleRateRad = angleRate * 4F * 0.01745329F;
+		
+		float i = 0; //use for particleindex, to offset position
+		
+		float range1 = (float) (Math.sin(((worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
+        float range2 = (float) (Math.cos(((worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius); 
+		
+		posX = center.posX - Math.cos(angle) * range1;
+		posY = center.posY + range2;
+		posZ = center.posZ + Math.sin(angle) * range1;
+		
+		decayTime = 0;
+		
+		this.setPosition(posX, posY, posZ);
+		
 		
 	}
 

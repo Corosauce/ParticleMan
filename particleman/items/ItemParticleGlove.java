@@ -59,7 +59,7 @@ public class ItemParticleGlove extends Item {
 				if (particle == null || particle.isDead) {
 					playerParticles.get(player.username).remove(particle);
 				} else {
-					particle.spinAround(player, 1F, 3F);
+					particle.spinAround(player, 1F, 1F);
 				}
 			}
 			
