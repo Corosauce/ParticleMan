@@ -76,11 +76,13 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		//Client logic
 		} else {
 			manageParticles();
-			if (worldObj.playerEntities.size() > 0) {
-				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
-				if (player != null) {
-					ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
-				}
+			
+		}
+		
+		if (worldObj.playerEntities.size() > 0) {
+			EntityPlayer player = worldObj.getPlayerEntityByName(owner);
+			if (player != null) {
+				ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
 			}
 		}
 		
@@ -97,7 +99,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         this.posY += this.motionY;
         this.posZ += this.motionZ;
         
-        
+        this.onGround = true;
 		
     }
 	
@@ -166,7 +168,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
     {
         data.writeInt(type);
         data.writeInt(index);
-        data.writeChars(owner);
+        data.writeUTF(owner);
     }
 
     @Override
@@ -174,7 +176,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
     {
         type = data.readInt();
         index = data.readInt();
-        owner = data.readLine();
+        owner = data.readUTF();
     }
 
 }

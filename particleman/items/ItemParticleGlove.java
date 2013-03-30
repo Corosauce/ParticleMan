@@ -61,7 +61,7 @@ public class ItemParticleGlove extends Item {
 				if (particle == null || particle.isDead || par3Entity.getDistanceToEntity(particle) > 50) {
 					playerParticles.get(player.username).remove(particle);
 				} else {
-					ParticleMan.spinAround(particle, player, 10F, 0.5F, 2F, particle.index, 0.02F, 1);
+					//ParticleMan.spinAround(particle, player, 10F, 0.5F, 2F, particle.index, 0.02F, 1);
 					particle.decayTime = 0;
 				}
 			}
