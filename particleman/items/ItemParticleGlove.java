@@ -38,6 +38,7 @@ public class ItemParticleGlove extends Item {
 		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
 			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
 			if (particle.getDistanceToEntity(player) < 6D) {
+				player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */"redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
 				//EntityParticleControllable particle = playerParticles.get(player.username).get(0);
 				playerParticles.get(player.username).remove(particle);
 				playerParticles.get(player.username).add(particle);
@@ -82,6 +83,9 @@ public class ItemParticleGlove extends Item {
 			}
 		}
 		
+		player.getFoodStats().addExhaustion(3F);
+		player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "shockwave_echo_loud", 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F));
+		
 		NBTTagCompound plData = player.getEntityData();
 		if (plData == null) plData = new NBTTagCompound();
 		if (plData.getInteger("particleMode") == 0) {
@@ -94,7 +98,10 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-		if (!par3World.isRemote) {
+		
+		
+		
+		if (!par3World.isRemote && par2EntityPlayer.getFoodStats().getFoodLevel() >= 6) {
 			check(par2EntityPlayer.username);
 			int id = par3World.getBlockId(par4, par5, par6);
 			
@@ -102,8 +109,10 @@ public class ItemParticleGlove extends Item {
 				int spawnType = -1;
 				if (id == Block.torchWood.blockID) {
 					spawnType = 0;
+					par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, "fire_grab", 0.9F, par3World.rand.nextFloat());
 				} else if (id == Block.torchRedstoneActive.blockID) {
 					spawnType = 1;
+					par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, "redstone_grab", 0.9F, par3World.rand.nextFloat());
 				}
 				
 				if (spawnType != -1) {
@@ -112,6 +121,9 @@ public class ItemParticleGlove extends Item {
 					particle.index = playerParticles.get(par2EntityPlayer.username).size();
 					playerParticles.get(par2EntityPlayer.username).add(particle);
 					par3World.spawnEntityInWorld(particle);
+					
+					par2EntityPlayer.getFoodStats().addExhaustion(1F);
+					
 					return true;
 				}
 			}
@@ -123,7 +135,6 @@ public class ItemParticleGlove extends Item {
 	
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		//System.out.println(par5);
 		if (par3Entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer)par3Entity;
 			if (!par2World.isRemote) {
@@ -133,7 +144,7 @@ public class ItemParticleGlove extends Item {
 				
 				if (plData == null) plData = new NBTTagCompound();
 				
-				if (player.isSneaking()) {
+				if (player.isSneaking() && par5) {
 					if (playerWasSneaking.get(player.username) == 0) {
 						System.out.println("mode toggle");
 						if (plData.getInteger("particleMode") == 0) {
@@ -171,7 +182,7 @@ public class ItemParticleGlove extends Item {
 		if (!par2World.isRemote) {
 			check(par3EntityPlayer.username);
 			if (par3EntityPlayer.isSneaking()) {
-				makeShockwave(par3EntityPlayer);
+				if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6) makeShockwave(par3EntityPlayer);
 			} else {
 				shootParticle(par3EntityPlayer);
 			}

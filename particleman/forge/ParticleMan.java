@@ -11,6 +11,7 @@ import particleman.items.ItemParticleGlove;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -117,8 +118,8 @@ public class ParticleMan {
 	        source.motionZ *= 0.95F;
 	        
     	} else if (controlType == 1) {
-    		double adjAngle = 40D;
-    		double dist = 1.5D;
+    		double adjAngle = 20D;
+    		double dist = 1.2D;
     		
     		if (mode == 1) {
     			adjAngle = 0D;
@@ -144,6 +145,9 @@ public class ParticleMan {
     				angle -= 10D;
     			}
     		} else {
+    			
+    			//angle -= 5D;
+    			
 	    		if (source.getDistance(newX, newY, newZ) < 3F) {
 	    			speedThreshold = 0.2F;
 	    			//speed *= 0.5D;
@@ -177,6 +181,7 @@ public class ParticleMan {
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
+    	MinecraftForge.EVENT_BUS.register(new SoundLoader());
     	config = new Configuration(event.getSuggestedConfigurationFile());
 
         try
@@ -199,6 +204,7 @@ public class ParticleMan {
     public void load(FMLInitializationEvent event)
     {
     	proxy.init(this);
+    	
     }
     
     @PostInit

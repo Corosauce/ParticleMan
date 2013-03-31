@@ -65,6 +65,11 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 
 	}
 	
+	@Override
+	public boolean canTriggerWalking() {
+		return false;
+	}
+	
 	public void influenceParticle(float parMotionX, float parMotionY, float parMotionZ) {
 		decayTime = 0;
 		motionX += parMotionX;
@@ -118,18 +123,31 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		float speedSlowing = 0.98F;
 		float gravity = 0F;
 		
+		if (isInWater()) speedSlowing *= 0.8F;
+		
 		this.motionX *= (double)speedSlowing;
         this.motionY *= (double)speedSlowing;
         this.motionZ *= (double)speedSlowing;
         this.motionY -= (double)gravity;
         
-        this.posX += this.motionX;
+        /*this.posX += this.motionX;
         this.posY += this.motionY;
-        this.posZ += this.motionZ;
+        this.posZ += this.motionZ;*/
         
-        this.setPosition(posX, posY, posZ);
+        //this.onGround = false;
         
-        this.onGround = true;
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        
+        if (!worldObj.isRemote && isInWater()) {
+        	if (type == 0) {
+        		setDead();
+        		worldObj.playSoundEffect(posX, posY, posZ, "random.fizz", 0.5F, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+        	}
+        }
+        
+        //this.setPosition(posX, posY, posZ);
+        
+        
         
         if (!worldObj.isRemote) {
         	double size = 0.5D;
@@ -143,8 +161,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            	Random rand = new Random();
 	            	
 	            	if (type == 0) {
-	            		var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, worldObj.getPlayerEntityByName(owner)), 3);
-	            		var10.setFire(50);
+	            		var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, worldObj.getPlayerEntityByName(owner)), 4);
+	            		var10.setFire(30);
 	            	} else if (type == 1) {
 	            		var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, worldObj.getPlayerEntityByName(owner)), 6);
 	            		float speed2 = 0.4F;
