@@ -46,10 +46,10 @@ public class ParticleMan {
     	
     }
     
-    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int mode) {
+    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int controlType, int mode) {
     	Random rand = new Random();
     	
-    	if (mode == 0) {
+    	if (controlType == 0) {
 			float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
 			float angle2 = (-center.rotationYaw + 65F + ((index*60) + source.worldObj.getWorldTime() % 360)) * 0.01745329F;
 			
@@ -118,9 +118,15 @@ public class ParticleMan {
 	        source.motionY *= 0.95F;
 	        source.motionZ *= 0.95F;
 	        
-    	} else if (mode == 1) {
+    	} else if (controlType == 1) {
     		double adjAngle = 40D;
     		double dist = 1.5D;
+    		
+    		if (mode == 1) {
+    			adjAngle = 0D;
+    			dist = 0D;
+    		}
+    		
     		double newX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
     		double newY = center.worldObj.isRemote ? center.posY - 1.68 : center.posY;
     		double newZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
@@ -142,7 +148,10 @@ public class ParticleMan {
     			angle -= 30D;
     		}
     		
-    	
+    		if (mode == 1) {
+    			angle += 30D;
+    			speed -= (rand.nextFloat() * 0.01F);
+    		}
     		
     		speed += (rand.nextFloat() * 0.005F);
     		

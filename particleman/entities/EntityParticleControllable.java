@@ -96,7 +96,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			if (worldObj.playerEntities.size() > 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
-					/*if (worldObj.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1);
+					/*if (worldObj.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1, player.isSneaking() ? 1 : 0);
 				}
 			}
 		} else {
@@ -177,7 +177,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				particles.remove(particle);
 			} else {
 				
-				ParticleMan.spinAround(particle, this, 10F, 0.2F, 0, i, 0.01F, 0);
+				ParticleMan.spinAround(particle, this, 10F, 0.2F, 0, i, 0.01F, 0, 0);
 				
 				particle.particleAge = 0;
 				
