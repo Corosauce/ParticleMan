@@ -147,7 +147,7 @@ public class ParticleMan {
     		}
     		
     		if (mode == 1) {
-    			angle += 30D;
+    			angle += 40D;
     			speed -= (rand.nextFloat() * 0.02F);
     		}
     		
@@ -163,8 +163,8 @@ public class ParticleMan {
     	        source.motionZ *= 0.95F;
     		}
 
-    		if (source.posY + 0.2D > newY + 0.5D) source.motionY -= /*rand.nextFloat() * */0.01F;
-    		if (source.posY - 0.2D < newY + 0.5D) source.motionY += /*rand.nextFloat() * */0.01F;
+    		if (source.posY + 0.2D > newY + 0.2D) source.motionY -= /*rand.nextFloat() * */0.01F;
+    		if (source.posY - 0.2D < newY + 0.2D) source.motionY += /*rand.nextFloat() * */0.01F;
     		
     	}
         

@@ -141,7 +141,18 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            	//this.motionX *= (0.95F + (rand.nextFloat() * 0.05F));
 	            	//this.motionY *= rand.nextFloat();
 	            	//this.motionZ *= (0.95F + (rand.nextFloat() * 0.05F));
-	            	break;
+	            	//break;
+	            } else {
+	            	float speed2 = 0.001F;
+
+					double vecX = posX - var10.posX;
+					double vecY = posY - var10.posY;
+					double vecZ = posZ - var10.posZ;
+
+					double dist2 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+					motionX += vecX / dist2 * speed2;
+					//particle.motionY += vecY / dist2 * speed2;
+					motionZ += vecZ / dist2 * speed2;
 	            }
 	            
 	        }
