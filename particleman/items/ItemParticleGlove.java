@@ -11,12 +11,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import particleman.entities.EntityParticleControllable;
 
 public class ItemParticleGlove extends Item {
 
 	public static HashMap<String, List<EntityParticleControllable>> playerParticles = new HashMap<String, List<EntityParticleControllable>>();
+	//public static HashMap<String, Integer> playerParticleMode = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerWasSneaking = new HashMap<String, Integer>();
 	
 	public ItemParticleGlove(int par1) {
 		super(par1);
@@ -24,7 +27,11 @@ public class ItemParticleGlove extends Item {
 	}
 	
 	public void check(String parUser) {
-		if (!playerParticles.containsKey(parUser)) playerParticles.put(parUser, new LinkedList<EntityParticleControllable>());
+		if (!playerParticles.containsKey(parUser)) {
+			playerParticles.put(parUser, new LinkedList<EntityParticleControllable>());
+			//playerParticleMode.put(parUser, 0);
+			playerWasSneaking.put(parUser, 0);
+		}
 	}
 	
 	public void shootParticle(EntityPlayer player) {
@@ -49,6 +56,29 @@ public class ItemParticleGlove extends Item {
 		        particle.motionY += vecY * speed;
 		        particle.motionZ += vecZ * speed;
 		        break;
+			}
+		}
+	}
+	
+	public void makeShockwave(EntityPlayer player) {
+		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
+			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
+			if (particle.getDistanceToEntity(player) < 10D) {
+				//playerParticles.get(player.username).remove(particle);
+				//playerParticles.get(player.username).add(particle);
+				
+				particle.state = 1;
+				
+				float speed2 = 0.8F;
+
+				double vecX = particle.posX - player.posX;
+				double vecY = particle.posY - player.posY;
+				double vecZ = particle.posZ - player.posZ;
+
+				double dist2 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+				particle.motionX += vecX / dist2 * speed2;
+				//particle.motionY += vecY / dist2 * speed2;
+				particle.motionZ += vecZ / dist2 * speed2;
 			}
 		}
 	}
@@ -90,7 +120,25 @@ public class ItemParticleGlove extends Item {
 			EntityPlayer player = (EntityPlayer)par3Entity;
 			if (!par2World.isRemote) {
 				check(player.username);
-	
+
+				NBTTagCompound plData = player.getEntityData();
+				
+				if (plData == null) plData = new NBTTagCompound();
+				
+				if (player.isSneaking()) {
+					if (playerWasSneaking.get(player.username) == 0) {
+						System.out.println("mode toggle");
+						if (plData.getInteger("particleMode") == 0) {
+							plData.setInteger("particleMode", 1);
+						} else {
+							plData.setInteger("particleMode", 0);
+						}
+					}
+					playerWasSneaking.put(player.username, 1);
+				} else {
+					playerWasSneaking.put(player.username, 0);
+				}
+				
 				for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
 					EntityParticleControllable particle = playerParticles.get(player.username).get(i);
 					
@@ -114,7 +162,11 @@ public class ItemParticleGlove extends Item {
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if (!par2World.isRemote) {
 			check(par3EntityPlayer.username);
-			shootParticle(par3EntityPlayer);
+			if (par3EntityPlayer.isSneaking()) {
+				makeShockwave(par3EntityPlayer);
+			} else {
+				shootParticle(par3EntityPlayer);
+			}
 		}
 		
 		return par1ItemStack;

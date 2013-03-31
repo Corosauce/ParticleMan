@@ -96,7 +96,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			if (worldObj.playerEntities.size() > 0) {
 				EntityPlayer player = worldObj.getPlayerEntityByName(owner);
 				if (player != null) {
-					/*if (worldObj.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1, player.isSneaking() ? 1 : 0);
+					/*if (worldObj.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1, (player.getEntityData() != null && player.getEntityData().getInteger("particleMode") == 1) ? 1 : 0);
 				}
 			}
 		} else {

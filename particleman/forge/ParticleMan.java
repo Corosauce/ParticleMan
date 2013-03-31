@@ -94,8 +94,6 @@ public class ParticleMan {
 	        source.motionY += vecY / dist2 * speed2;
 	        source.motionZ += vecZ / dist2 * speed2;
 	        
-	        
-	        
 	        if (dist2 < 1D) {
 	        	source.motionX *= 0.8F;
 		        source.motionY *= 0.8F;
@@ -150,7 +148,7 @@ public class ParticleMan {
     		
     		if (mode == 1) {
     			angle += 30D;
-    			speed -= (rand.nextFloat() * 0.01F);
+    			speed -= (rand.nextFloat() * 0.02F);
     		}
     		
     		speed += (rand.nextFloat() * 0.005F);
@@ -165,23 +163,11 @@ public class ParticleMan {
     	        source.motionZ *= 0.95F;
     		}
 
-    		
     		if (source.posY + 0.2D > newY + 0.5D) source.motionY -= /*rand.nextFloat() * */0.01F;
     		if (source.posY - 0.2D < newY + 0.5D) source.motionY += /*rand.nextFloat() * */0.01F;
     		
-    		//source.setPosition(source.posX, center.posY + 0.7F, source.posZ);
-    		//source.posY = center.posY + 0.7F;
-    		
-	        
-	        
     	}
         
-        
-        
-		
-		
-		
-		
 	}
     
     @PreInit
