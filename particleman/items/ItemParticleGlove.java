@@ -81,6 +81,14 @@ public class ItemParticleGlove extends Item {
 				particle.motionZ += vecZ / dist2 * speed2;
 			}
 		}
+		
+		NBTTagCompound plData = player.getEntityData();
+		if (plData == null) plData = new NBTTagCompound();
+		if (plData.getInteger("particleMode") == 0) {
+			plData.setInteger("particleMode", 1);
+		} else {
+			plData.setInteger("particleMode", 0);
+		}
 	}
 	
 	@Override
@@ -142,7 +150,7 @@ public class ItemParticleGlove extends Item {
 				for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
 					EntityParticleControllable particle = playerParticles.get(player.username).get(i);
 					
-					if (particle == null || particle.isDead || par3Entity.getDistanceToEntity(particle) > 50) {
+					if (particle == null || particle.isDead || par3Entity.getDistanceToEntity(particle) > 80) {
 						playerParticles.get(player.username).remove(particle);
 					} else {
 						//ParticleMan.spinAround(particle, player, 10F, 0.5F, 2F, particle.index, 0.02F, 1);
@@ -151,8 +159,8 @@ public class ItemParticleGlove extends Item {
 				}
 			} else {
 				if (par3Entity instanceof EntityPlayerSP) {
-					((EntityPlayerSP)player).movementInput.moveStrafe *= 5;
-					((EntityPlayerSP)player).movementInput.moveForward *= 5;
+					//((EntityPlayerSP)player).movementInput.moveStrafe *= 5;
+					//((EntityPlayerSP)player).movementInput.moveForward *= 5;
 				}
 			}
 		}

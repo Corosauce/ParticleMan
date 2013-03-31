@@ -136,19 +136,23 @@ public class ParticleMan {
     		
     		double speedThreshold = 0.3F;
     		
-    		if (source.getDistance(newX, newY, newZ) < 3F) {
-    			speedThreshold = 0.2F;
-    			//speed *= 0.5D;
-    			source.motionX *= 0.89F;
-    	        source.motionY *= 0.89F;
-    	        source.motionZ *= 0.89F;
-    		} else {
-    			angle -= 30D;
-    		}
-    		
     		if (mode == 1) {
-    			angle += 40D;
+    			angle += 5D;
     			speed -= (rand.nextFloat() * 0.02F);
+    			speed *= 0.5F;
+    			if (source.getDistance(newX, newY, newZ) > 3F) {
+    				angle -= 10D;
+    			}
+    		} else {
+	    		if (source.getDistance(newX, newY, newZ) < 3F) {
+	    			speedThreshold = 0.2F;
+	    			//speed *= 0.5D;
+	    			source.motionX *= 0.89F;
+	    	        source.motionY *= 0.89F;
+	    	        source.motionZ *= 0.89F;
+	    		} else {
+	    			angle -= 30D;
+	    		}
     		}
     		
     		speed += (rand.nextFloat() * 0.005F);

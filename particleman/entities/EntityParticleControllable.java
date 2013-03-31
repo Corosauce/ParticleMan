@@ -28,6 +28,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public String owner = "";
 	public int type = 0; //0 = fire, 1 = redstone
 	public int state = 0; //0 = being grabbed, 1 = free
+	public int health = 0;
 	
 	public int index = 0;
 	
@@ -50,6 +51,11 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		super(par1World);
 		type = parType;
 		owner = parOwner;
+		if (type == 0) {
+			health = 5;
+		} else {
+			health = 3;
+		}
 	}
 
 	@Override
@@ -136,14 +142,36 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            if (var10 != null && !var10.isDead && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner) || (var10 instanceof EntityLiving && ((EntityLiving)var10).health > 0 && !(var10 instanceof EntityPlayer)))) {
 	            	Random rand = new Random();
 	            	
-	            	var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this), 10);
-	            	setDead();
+	            	if (type == 0) {
+	            		var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, worldObj.getPlayerEntityByName(owner)), 3);
+	            		var10.setFire(50);
+	            	} else if (type == 1) {
+	            		var10.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, worldObj.getPlayerEntityByName(owner)), 6);
+	            		float speed2 = 0.4F;
+
+						double vecX = var10.posX - posX;
+						double vecY = var10.posY - posY;
+						double vecZ = var10.posZ - posZ;
+
+						double dist2 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+						double particleSpeed = (double)Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+						
+						speed2 += particleSpeed;
+						
+						var10.motionX += vecX / dist2 * speed2;
+						var10.motionY += 0.3F;
+						var10.motionZ += vecZ / dist2 * speed2;
+	            	}
+	            	health--;
+	            	if (health <= 0) {
+	            		setDead();
+	            	}
 	            	//this.motionX *= (0.95F + (rand.nextFloat() * 0.05F));
 	            	//this.motionY *= rand.nextFloat();
 	            	//this.motionZ *= (0.95F + (rand.nextFloat() * 0.05F));
-	            	//break;
-	            } else {
-	            	float speed2 = 0.001F;
+	            	
+	            } else if (var10 instanceof EntityParticleControllable) {
+	            	float speed2 = 0.003F;
 
 					double vecX = posX - var10.posX;
 					double vecY = posY - var10.posY;
@@ -153,6 +181,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 					motionX += vecX / dist2 * speed2;
 					//particle.motionY += vecY / dist2 * speed2;
 					motionZ += vecZ / dist2 * speed2;
+					//break;
 	            }
 	            
 	        }
