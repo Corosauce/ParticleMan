@@ -83,7 +83,7 @@ public class ItemParticleGlove extends Item {
 			}
 		}
 		
-		player.getFoodStats().addExhaustion(3F);
+		if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(3F);
 		player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "shockwave_echo_loud", 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F));
 		
 		NBTTagCompound plData = player.getEntityData();
@@ -122,7 +122,7 @@ public class ItemParticleGlove extends Item {
 					playerParticles.get(par2EntityPlayer.username).add(particle);
 					par3World.spawnEntityInWorld(particle);
 					
-					par2EntityPlayer.getFoodStats().addExhaustion(1F);
+					if (!par2EntityPlayer.capabilities.isCreativeMode) par2EntityPlayer.getFoodStats().addExhaustion(1F);
 					
 					return true;
 				}

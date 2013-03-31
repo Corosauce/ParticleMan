@@ -20,6 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -237,7 +238,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				
 				ParticleMan.spinAround(particle, this, 10F, 0.2F, 0, i, 0.01F, 0, 0);
 				
-				particle.particleAge = 0;
+				ReflectionHelper.setPrivateValue(EntityFX.class, particle, 0, "field_70546_d", "particleAge");
+				
+				//particle.particleAge = 0;
 				
 				//particle.setPosition(posX, posY, posZ);
 				
