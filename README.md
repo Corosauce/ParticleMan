@@ -2,3 +2,19 @@ ParticleMan
 ===========
 
 Particle Man remake for minecraft 1.5.1, created for fun for #modjam
+
+How to use:
+
+- Particle Glove is in misc creative tab, or use recipe in video: http://www.youtube.com/watch?v=3D-QV5ab_dg
+- Aim directly at torches and right click to grab the particles from it
+- Requires ample food supply to use
+
+Controls:
+
+- Right click open air: shoots particles
+- Pressing crouch once: toggles particle rotate mode between hand/shield
+- Holding crouch & right click: creates shockwave
+
+Notes about PVP:
+
+- Should work, but untested, forced PVP on, particles should cancel eachother out when hit from other players
