@@ -2,6 +2,7 @@ package particleman.forge;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ModLoader;
+import net.minecraftforge.common.MinecraftForge;
 import particleman.client.RenderParticleControllable;
 import particleman.entities.EntityParticleControllable;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -16,6 +17,13 @@ public class ClientProxy extends CommonProxy
     public ClientProxy()
     {
         mc = ModLoader.getMinecraftInstance();
+    }
+    
+    @Override
+    public void preInit(ParticleMan pMod)
+    {
+    	super.preInit(pMod);
+    	MinecraftForge.EVENT_BUS.register(new SoundLoader());
     }
 
     @Override

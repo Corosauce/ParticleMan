@@ -24,6 +24,11 @@ public class CommonProxy implements IGuiHandler
     {
     }
 
+    public void preInit(ParticleMan pMod)
+    {
+    	
+    }
+    
     public void init(ParticleMan pMod)
     {
         mod = pMod;

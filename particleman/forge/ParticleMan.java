@@ -181,7 +181,6 @@ public class ParticleMan {
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
-    	MinecraftForge.EVENT_BUS.register(new SoundLoader());
     	config = new Configuration(event.getSuggestedConfigurationFile());
 
         try

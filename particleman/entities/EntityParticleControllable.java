@@ -40,7 +40,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public int regrabDelayMax = 20;
 	
 	@SideOnly(Side.CLIENT)
-	public List<EntityFX> particles = new LinkedList<EntityFX>();
+	public List<EntityFX> particles;
 	
 	public EntityParticleControllable(World par1World) {
 		super(par1World);
@@ -215,6 +215,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		EntityFX entFX = null;
 		
 		//System.out.println("particles.size(): " + particles.size());
+		
+		if (particles == null) particles = new LinkedList<EntityFX>();
 		
 		if (particles.size() < 15) {
 			if (type == 0) {
