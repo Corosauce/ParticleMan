@@ -26,7 +26,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 
-@NetworkMod(clientSideRequired = true, serverSideRequired = true)
+@NetworkMod(channels = { "PMGloveCommand" }, clientSideRequired = true, serverSideRequired = true, packetHandler = PMPacketHandler.class)
 @Mod(modid = "ParticleMan", name="Particle Man", version="v1.0")
 public class ParticleMan {
 	
@@ -39,7 +39,9 @@ public class ParticleMan {
     @SidedProxy(clientSide = "particleman.forge.ClientProxy", serverSide = "particleman.forge.CommonProxy")
     public static CommonProxy proxy;
     
-    int itemIDStart = 3242;
+    //Config
+    public int itemIDStart = 3242;
+    public static boolean hurtAnimals = false;
     
     public static Item itemGlove;
 
@@ -187,6 +189,7 @@ public class ParticleMan {
         {
         	config.load();
         	itemIDStart = config.get(Configuration.CATEGORY_BLOCK, "itemIDStart", itemIDStart).getInt(itemIDStart);
+        	hurtAnimals = config.get(Configuration.CATEGORY_GENERAL, "hurtAnimals", false).getBoolean(false);
             
         }
         catch (Exception e)
@@ -197,6 +200,8 @@ public class ParticleMan {
         {
         	config.save();
         }
+        
+        proxy.preInit(this);
     }
     
     @Init
