@@ -10,7 +10,7 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -214,7 +214,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLiving && ((EntityLiving)var10).health > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
+	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).func_110143_aJ() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
 	            	if (!(var10 instanceof EntityAnimal) || ParticleMan.hurtAnimals) {
@@ -259,7 +259,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 							this.setDead();
 			        	}
 	            	}
-	            } else if (var10 instanceof EntityLiving) {
+	            } else if (var10 instanceof EntityLivingBase) {
 	            	if (type == 2) {
 	            		var10.extinguish();
 	            	}

@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-import particleman.entities.EntityParticleControllable;
-import particleman.items.ItemParticleGlove;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
+import particleman.entities.EntityParticleControllable;
+import particleman.items.ItemParticleGlove;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -32,6 +30,7 @@ public class ParticleMan {
 	
 	@Mod.Instance( value = "ParticleMan" )
 	public static ParticleMan instance;
+	public static String modID = "particleman";
     
     /** For use in preInit ONLY */
     public Configuration config;

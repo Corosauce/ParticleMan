@@ -8,8 +8,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import particleman.items.ItemParticleGlove;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.ITickHandler;
@@ -17,6 +18,9 @@ import cpw.mods.fml.common.TickType;
 
 public class ClientTickHandler implements ITickHandler
 {
+	public ResourceLocation resTank = new ResourceLocation(ParticleMan.modID + ":textures/gui/tank.png");
+	public ResourceLocation resTerrain = TextureMap.field_110575_b;
+	
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData) {}
 
@@ -86,11 +90,13 @@ public class ClientTickHandler implements ITickHandler
     	        int yOffset = 2;
     			
     			
-    			mc.renderEngine.bindTexture("/mods/ParticleMan/textures/gui/tank.png");
+    			//mc.renderEngine.bindTexture("/mods/ParticleMan/textures/gui/tank.png");
+    			mc.func_110434_K().func_110577_a(resTank);
     			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xFFFFFF);
     			mc.ingameGUI.drawTexturedModalRect(width/2 + 95 - 4, height - (2+yOffset+6*3), 0, 0, 72, 22);
     			
-    			mc.renderEngine.bindTexture("/terrain.png");
+    			//mc.renderEngine.bindTexture("/terrain.png");
+    			mc.func_110434_K().func_110577_a(resTerrain);
     			if (fireMode == 0) {
 	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
 	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Block.blockClay.getIcon(0, 0), 65, ySize);

@@ -1,18 +1,17 @@
 package particleman.forge;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.util.EnumSet;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.util.EnumSet;
-
 import org.lwjgl.input.Keyboard;
 
 import particleman.items.ItemParticleGlove;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;

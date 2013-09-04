@@ -1,19 +1,14 @@
 package particleman.forge;
 
-import net.minecraft.entity.Entity;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
-
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-
 import particleman.items.ItemParticleGlove;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
