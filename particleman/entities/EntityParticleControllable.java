@@ -214,7 +214,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).func_110143_aJ() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
+	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
 	            	if (!(var10 instanceof EntityAnimal) || ParticleMan.hurtAnimals) {
@@ -313,7 +313,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				
 				ParticleMan.spinAround(particle, this, 10F, 0.2F, 0, i, 0.01F, 0, 0);
 				
-				//ReflectionHelper.setPrivateValue(EntityFX.class, particle, 0, "field_70546_d", "particleAge");
+				//ReflectionHelper.setPrivateValue(EntityFX.class, particle, 0, "particleAge", "particleAge");
 				
 				//particle.particleAge = 0;
 				

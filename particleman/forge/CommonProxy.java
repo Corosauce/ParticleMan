@@ -34,7 +34,7 @@ public class CommonProxy implements IGuiHandler
         
         pMod.itemGlove = (new ItemParticleGlove(pMod.itemIDStart)).setCreativeTab(CreativeTabs.tabMisc);
         pMod.itemGlove.setUnlocalizedName(ParticleMan.modID + ":particleglove");
-        pMod.itemGlove.func_111206_d(ParticleMan.modID + ":particleglove");
+        pMod.itemGlove.setTextureName(ParticleMan.modID + ":particleglove");
         
         LanguageRegistry.addName(pMod.itemGlove, "Particle Glove");
         GameRegistry.addRecipe(new ItemStack(pMod.itemGlove), new Object[] {" LL", "LRR", "LRD", Character.valueOf('L'), Item.leather, Character.valueOf('R'), Item.redstone, Character.valueOf('D'), Item.diamond});
