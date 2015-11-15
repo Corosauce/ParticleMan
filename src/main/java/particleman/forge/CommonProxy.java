@@ -2,6 +2,7 @@ package particleman.forge;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -32,12 +33,14 @@ public class CommonProxy implements IGuiHandler
     {
         mod = pMod;
         
-        pMod.itemGlove = (new ItemParticleGlove(pMod.itemIDStart)).setCreativeTab(CreativeTabs.tabMisc);
+        pMod.itemGlove = (new ItemParticleGlove()).setCreativeTab(CreativeTabs.tabMisc);
         pMod.itemGlove.setUnlocalizedName(ParticleMan.modID + ":particleglove");
         pMod.itemGlove.setTextureName(ParticleMan.modID + ":particleglove");
         
+        GameRegistry.registerItem(pMod.itemGlove, "particleglove");
+        
         LanguageRegistry.addName(pMod.itemGlove, "Particle Glove");
-        GameRegistry.addRecipe(new ItemStack(pMod.itemGlove), new Object[] {" LL", "LRR", "LRD", Character.valueOf('L'), Item.leather, Character.valueOf('R'), Item.redstone, Character.valueOf('D'), Item.diamond});
+        GameRegistry.addRecipe(new ItemStack(pMod.itemGlove), new Object[] {" LL", "LRR", "LRD", Character.valueOf('L'), Items.leather, Character.valueOf('R'), Items.redstone, Character.valueOf('D'), Items.diamond});
         
         
         //TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);

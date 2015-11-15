@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.EntityFX;
@@ -13,6 +14,7 @@ import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +23,8 @@ import net.minecraft.world.World;
 import particleman.element.Element;
 import particleman.entities.EntityParticleControllable;
 import particleman.forge.ParticleMan;
+import CoroUtil.util.CoroUtilBlock;
+import CoroUtil.util.CoroUtilEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -52,9 +56,8 @@ public class ItemParticleGlove extends Item {
 	public static int depleteRate = 5;
 	public static int maxStorage = 300;
 	
-	public ItemParticleGlove(int par1) {
-		super(par1);
-		// TODO Auto-generated constructor stub
+	public ItemParticleGlove() {
+		super();
 	}
 	
 	public void check(String parUser) {
@@ -66,8 +69,8 @@ public class ItemParticleGlove extends Item {
 	}
 	
 	public void shieldRetract(EntityPlayer player) {
-		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
-			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
+		for (int i = 0; i < playerParticles.get(CoroUtilEntity.getName(player)).size(); i++) {
+			EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 			//if (particle.getDistanceToEntity(player) < 10D) {
 				//playerParticles.get(player.username).remove(particle);
 				//playerParticles.get(player.username).add(particle);
@@ -96,15 +99,15 @@ public class ItemParticleGlove extends Item {
 				item.stackTagCompound.setInteger("pm_storage_" + fireMode, Math.max(curAmount - (deplete * createCount), 0));
 				
 				for (int i = 0; i < createCount; i++) {
-					EntityParticleControllable particle = new EntityParticleControllable(player.worldObj, player.username, fireMode);
+					EntityParticleControllable particle = new EntityParticleControllable(player.worldObj, CoroUtilEntity.getName(player), fireMode);
 					
 					//TEMP POS, PUT AT HAND LATER FOR MORE ACCURACY
 					particle.setPosition(player.posX, player.posY + 1, player.posZ);
-					particle.index = playerParticles.get(player.username).size();
+					particle.index = playerParticles.get(CoroUtilEntity.getName(player)).size();
 					player.worldObj.spawnEntityInWorld(particle);
 					
 					if (forShield) {
-						playerParticles.get(player.username).add(particle);
+						playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
 						particle.moveMode = 1;
 						player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":fire_shoot", 0.9F, player.worldObj.rand.nextFloat());
 					} else {
@@ -158,13 +161,13 @@ public class ItemParticleGlove extends Item {
 	}
 	
 	public int shootParticle(EntityPlayer player) {
-		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
-			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
+		for (int i = 0; i < playerParticles.get(CoroUtilEntity.getName(player)).size(); i++) {
+			EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 			if (particle.getDistanceToEntity(player) < 6D) {
 				player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
-				//EntityParticleControllable particle = playerParticles.get(player.username).get(0);
+				//EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(0);
 				
-				playerParticles.get(player.username).add(particle);
+				playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
 				
 				particle.state = 1;
 				
@@ -182,8 +185,8 @@ public class ItemParticleGlove extends Item {
 		        
 		        //wont work for motion, server side
 		        if (particle.type == 2) {
-		        	for (int j = 0; j < playerParticles.get(player.username).size(); j++) {
-		    			EntityParticleControllable particle2 = playerParticles.get(player.username).get(j);
+		        	for (int j = 0; j < playerParticles.get(CoroUtilEntity.getName(player)).size(); j++) {
+		    			EntityParticleControllable particle2 = playerParticles.get(CoroUtilEntity.getName(player)).get(j);
 		    			//if (particle.getDistanceToEntity(player) > 4D) {
 		    			if (particle2 != particle) {
 		    				particle2.setPosition(player.posX, player.posY, player.posZ);
@@ -196,7 +199,7 @@ public class ItemParticleGlove extends Item {
 		        	//System.out.println("HURT");
 		        	if (particle.health <= 0) {
 		        		particle.setDead();
-		        		playerParticles.get(player.username).remove(particle);
+		        		playerParticles.get(CoroUtilEntity.getName(player)).remove(particle);
 		        	}
 		        }
 		        return particle.type;
@@ -208,11 +211,11 @@ public class ItemParticleGlove extends Item {
 	
 	
 	public void makeShockwave(EntityPlayer player) {
-		for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
-			EntityParticleControllable particle = playerParticles.get(player.username).get(i);
+		for (int i = 0; i < playerParticles.get(CoroUtilEntity.getName(player)).size(); i++) {
+			EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 			if (particle.getDistanceToEntity(player) < 10D) {
-				//playerParticles.get(player.username).remove(particle);
-				//playerParticles.get(player.username).add(particle);
+				//playerParticles.get(CoroUtilEntity.getName(player)).remove(particle);
+				//playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
 				
 				particle.state = 1;
 				
@@ -247,18 +250,18 @@ public class ItemParticleGlove extends Item {
 		if (par1ItemStack.stackTagCompound == null) par1ItemStack.stackTagCompound = new NBTTagCompound();
 		//if (!par3World.isRemote) {
 			if (par2EntityPlayer.getFoodStats().getFoodLevel() >= 6) {
-				check(par2EntityPlayer.username);
-				int id = par3World.getBlockId(par4, par5, par6);
-				int id2 = par3World.getBlockId(par4, par5+1, par6);
-				if (id != 0) {
+				check(CoroUtilEntity.getName(par2EntityPlayer));
+				Block id = par3World.getBlock(par4, par5, par6);
+				Block id2 = par3World.getBlock(par4, par5+1, par6);
+				if (!CoroUtilBlock.isAir(id)) {
 					int spawnType = -1;
-					if (id == Block.torchWood.blockID || id2 == Block.fire.blockID) {
+					if (id == Blocks.torch || id2 == Blocks.fire) {
 						spawnType = 0;
-						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grabb", 0.9F, par3World.rand.nextFloat());
-					} else if (id == Block.torchRedstoneActive.blockID || id == Block.oreRedstoneGlowing.blockID || id == Block.redstoneWire.blockID) {
+						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grab", 0.9F, par3World.rand.nextFloat());
+					} else if (id == Blocks.redstone_torch || id == Blocks.redstone_ore || id == Blocks.redstone_wire) {
 						spawnType = 1;
 						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
-					} else if (id2 == Block.waterStill.blockID || id2 == Block.waterMoving.blockID) {
+					} else if (id2.getMaterial() == Material.water) {
 						spawnType = 2;
 						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
 					}
@@ -326,14 +329,14 @@ public class ItemParticleGlove extends Item {
 		if (par3Entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer)par3Entity;
 			if (!par2World.isRemote) {
-				check(player.username);
+				check(CoroUtilEntity.getName(player));
 
 				NBTTagCompound plData = player.getEntityData();
 				
 				if (plData == null) plData = new NBTTagCompound();
 				
 				if (player.isSneaking() && par5) {
-					if (playerWasSneaking.get(player.username) == 0) {
+					if (playerWasSneaking.get(CoroUtilEntity.getName(player)) == 0) {
 						//System.out.println("mode toggle");
 						if (plData.getInteger("particleMode") == 0) {
 							plData.setInteger("particleMode", 1);
@@ -341,16 +344,16 @@ public class ItemParticleGlove extends Item {
 							plData.setInteger("particleMode", 0);
 						}
 					}
-					playerWasSneaking.put(player.username, 1);
+					playerWasSneaking.put(CoroUtilEntity.getName(player), 1);
 				} else {
-					playerWasSneaking.put(player.username, 0);
+					playerWasSneaking.put(CoroUtilEntity.getName(player), 0);
 				}
 				
-				for (int i = 0; i < playerParticles.get(player.username).size(); i++) {
-					EntityParticleControllable particle = playerParticles.get(player.username).get(i);
+				for (int i = 0; i < playerParticles.get(CoroUtilEntity.getName(player)).size(); i++) {
+					EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 					
 					if (particle == null || particle.isDead || par3Entity.getDistanceToEntity(particle) > 50) {
-						playerParticles.get(player.username).remove(particle);
+						playerParticles.get(CoroUtilEntity.getName(player)).remove(particle);
 					} else {
 						//ParticleMan.spinAround(particle, player, 10F, 0.5F, 2F, particle.index, 0.02F, 1);
 						particle.decayTime = 0;
@@ -372,7 +375,7 @@ public class ItemParticleGlove extends Item {
 		if (par1ItemStack.stackTagCompound == null) par1ItemStack.stackTagCompound = new NBTTagCompound();
 		
 		if (!par2World.isRemote) {
-			check(par3EntityPlayer.username);
+			check(CoroUtilEntity.getName(par3EntityPlayer));
 			if (par3EntityPlayer.isSneaking()) {
 				if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6) makeShockwave(par3EntityPlayer);
 			} else {

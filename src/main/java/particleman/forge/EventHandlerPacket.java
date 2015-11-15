@@ -1,0 +1,81 @@
+package particleman.forge;
+
+import io.netty.buffer.ByteBuf;
+import particleman.items.ItemParticleGlove;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetHandlerPlayServer;
+import CoroUtil.packet.PacketHelper;
+import CoroUtil.util.CoroUtilEntity;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class EventHandlerPacket {
+	
+	//1.6.4 original usage was PMGloveCommand channel, but we only have 1 type of packet, so a packetCommand lookup isnt needed
+	
+	@SubscribeEvent
+	public void onPacketFromServer(FMLNetworkEvent.ClientCustomPacketEvent event) {
+		
+		try {
+			NBTTagCompound nbt = PacketHelper.readNBTTagCompound(event.packet.payload());
+			
+			String packetCommand = nbt.getString("packetCommand");
+			
+			if (packetCommand.equals("")) {
+				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+	
+	@SubscribeEvent
+	public void onPacketFromClient(FMLNetworkEvent.ServerCustomPacketEvent event) {
+		EntityPlayerMP entP = ((NetHandlerPlayServer)event.handler).playerEntity;
+		
+		try {
+			
+			ByteBuf buffer = event.packet.payload();
+			
+	        //if ("PMGloveCommand".equals(packet.channel)) {
+	        	int commandID = buffer.readInt();
+	        	int slotID = buffer.readInt();
+	        	
+	        	ItemStack is = entP.inventory.getStackInSlot(slotID);
+	        	
+	        	if (is != null && is.getItem() instanceof ItemParticleGlove) {
+	        		if (is.stackTagCompound == null) is.stackTagCompound = new NBTTagCompound();
+	        		if (commandID == 0) {
+	        			int fireMode = is.stackTagCompound.getInteger("pm_fireMode") + 1;
+	        			if (fireMode >= 3) fireMode = 0;
+	        			is.stackTagCompound.setInteger("pm_fireMode", fireMode);
+	        			
+		        	} else if (commandID == 1) {
+		        		((ItemParticleGlove)is.getItem()).createParticleFromInternal(entP, is, true, 5);
+		        	} else if (commandID == 2) {
+		        		((ItemParticleGlove)is.getItem()).shieldRetract(entP);
+		        	}
+	        	}
+			//}
+        	
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
+	}
+    
+    @SideOnly(Side.CLIENT)
+    public String getSelfUsername() {
+    	return CoroUtilEntity.getName(Minecraft.getMinecraft().thePlayer);
+    }
+	
+}

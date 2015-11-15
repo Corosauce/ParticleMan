@@ -3,28 +3,24 @@ package particleman.forge;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 import particleman.entities.EntityParticleControllable;
 import particleman.items.ItemParticleGlove;
-import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.FMLEventChannel;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 
-@NetworkMod(channels = { "PMGloveCommand" }, clientSideRequired = true, serverSideRequired = true, packetHandler = PMPacketHandler.class)
 @Mod(modid = "ParticleMan", name="Particle Man", version="v1.0")
 public class ParticleMan {
 	
@@ -39,10 +35,12 @@ public class ParticleMan {
     public static CommonProxy proxy;
     
     //Config
-    public int itemIDStart = 3242;
     public static boolean hurtAnimals = false;
     
     public static Item itemGlove;
+    
+    public static String eventChannelName = "particleman";
+	public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(eventChannelName);
 
     public ParticleMan() {
     	
@@ -179,21 +177,24 @@ public class ParticleMan {
         
 	}
     
-    @PreInit
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+    	
+    	eventChannel.register(new EventHandlerPacket());
+    	
     	config = new Configuration(event.getSuggestedConfigurationFile());
 
         try
         {
         	config.load();
-        	itemIDStart = config.get(Configuration.CATEGORY_BLOCK, "itemIDStart", itemIDStart).getInt(itemIDStart);
+        	//itemIDStart = config.get(Configuration.CATEGORY_BLOCK, "itemIDStart", itemIDStart).getInt(itemIDStart);
         	hurtAnimals = config.get(Configuration.CATEGORY_GENERAL, "hurtAnimals", false).getBoolean(false);
             
         }
         catch (Exception e)
         {
-            FMLLog.log(Level.SEVERE, e, "Hostile Worlds has a problem loading it's configuration");
+            System.out.println("Hostile Worlds has a problem loading it's configuration");
         }
         finally
         {
@@ -203,24 +204,25 @@ public class ParticleMan {
         proxy.preInit(this);
     }
     
-    @Init
+    @Mod.EventHandler
     public void load(FMLInitializationEvent event)
     {
     	proxy.init(this);
+    	FMLCommonHandler.instance().bus().register(new EventHandlerFML());
     	
     }
     
-    @PostInit
+    @Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		
 	}
     
-    @Mod.ServerStarted
+    @Mod.EventHandler
     public void serverStart(FMLServerStartedEvent event) {
     	ItemParticleGlove.playerParticles = new HashMap<String, List<EntityParticleControllable>>();
     }
     
-    @Mod.ServerStopped
+    @Mod.EventHandler
     public void serverStop(FMLServerStoppedEvent event) {
     	
     }

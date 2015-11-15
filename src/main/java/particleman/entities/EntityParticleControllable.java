@@ -1,8 +1,12 @@
 package particleman.entities;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import CoroUtil.util.CoroUtilEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -13,6 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -20,10 +25,7 @@ import net.minecraft.world.World;
 import particleman.element.Element;
 import particleman.forge.ParticleMan;
 import particleman.items.ItemParticleGlove;
-
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -191,11 +193,11 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	        	}
         	}
         	
-        	int id = worldObj.getBlockId((int)posX, (int)posY, (int)posZ);
+        	Block id = worldObj.getBlock((int)posX, (int)posY, (int)posZ);
         	
         	if (type == 2) {
-        		if (id == Block.fire.blockID) {
-            		worldObj.setBlock((int)posX, (int)posY, (int)posZ, 0);
+        		if (id == Blocks.fire) {
+            		worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.air);
             		health--;
             	}
         	}
@@ -214,7 +216,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && ((EntityPlayer)var10).username != owner && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
+	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
 	            	if (!(var10 instanceof EntityAnimal) || ParticleMan.hurtAnimals) {
@@ -240,7 +242,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 						motionZ += vecZ / dist2 * speed2;
 					}
 					//break;
-	            } else if (var10 instanceof EntityPlayer && ((EntityPlayer)var10).username.equals(owner)) {
+	            } else if (var10 instanceof EntityPlayer && CoroUtilEntity.getName(var10).equals(owner)) {
 	            	EntityPlayer entP = (EntityPlayer)var10;
 	            	if (type == 2) {
 	            		var10.extinguish();
@@ -346,19 +348,19 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	}
 
 	@Override
-    public void writeSpawnData(ByteArrayDataOutput data)
+    public void writeSpawnData(ByteBuf data)
     {
         data.writeInt(type);
         data.writeInt(index);
-        data.writeUTF(owner);
+        ByteBufUtils.writeUTF8String(data, owner);
     }
 
     @Override
-    public void readSpawnData(ByteArrayDataInput data)
+    public void readSpawnData(ByteBuf data)
     {
         type = data.readInt();
         index = data.readInt();
-        owner = data.readUTF();
+        owner = ByteBufUtils.readUTF8String(data);
     }
 
 }
