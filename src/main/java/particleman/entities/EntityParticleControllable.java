@@ -6,13 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import CoroUtil.util.CoroUtilEntity;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntityFlameFX;
-import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -22,13 +17,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import particleman.element.Element;
 import particleman.forge.ParticleMan;
 import particleman.items.ItemParticleGlove;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import CoroUtil.util.CoroUtilEntity;
 
 public class EntityParticleControllable extends Entity implements IEntityAdditionalSpawnData {
 
@@ -196,8 +193,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         	Block id = worldObj.getBlock((int)posX, (int)posY, (int)posZ);
         	
         	if (type == 2) {
-        		if (id == Blocks.fire) {
-            		worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.air);
+        		if (id == Blocks.FIRE) {
+            		worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.AIR);
             		health--;
             	}
         	}
@@ -210,13 +207,13 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         
         if (!worldObj.isRemote) {
         	double size = 0.5D;
-	        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(size, size, size));
+	        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(size, size, size));
 	        
 	        for (int i = 0; entities != null && i < entities.size(); ++i)
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && MinecraftServer.getServer().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
+	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
 	            	if (!(var10 instanceof EntityAnimal) || ParticleMan.hurtAnimals) {

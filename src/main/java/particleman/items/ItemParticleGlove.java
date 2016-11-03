@@ -9,9 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntityFlameFX;
-import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -20,13 +17,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import particleman.element.Element;
 import particleman.entities.EntityParticleControllable;
 import particleman.forge.ParticleMan;
 import CoroUtil.util.CoroUtilBlock;
 import CoroUtil.util.CoroUtilEntity;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemParticleGlove extends Item {
 
@@ -255,13 +252,13 @@ public class ItemParticleGlove extends Item {
 				Block id2 = par3World.getBlock(par4, par5+1, par6);
 				if (!CoroUtilBlock.isAir(id)) {
 					int spawnType = -1;
-					if (id == Blocks.torch || id2 == Blocks.fire) {
+					if (id == Blocks.TORCH || id2 == Blocks.FIRE) {
 						spawnType = 0;
 						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grab", 0.9F, par3World.rand.nextFloat());
-					} else if (id == Blocks.redstone_torch || id == Blocks.redstone_ore || id == Blocks.redstone_wire) {
+					} else if (id == Blocks.REDSTONE_TORCH || id == Blocks.REDSTONE_ORE || id == Blocks.REDSTONE_WIRE) {
 						spawnType = 1;
 						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
-					} else if (id2.getMaterial() == Material.water) {
+					} else if (id2.getMaterial() == Material.WATER) {
 						spawnType = 2;
 						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
 					}
@@ -439,7 +436,7 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
-        return EnumAction.bow;
+        return EnumAction.BOW;
     }
 	
 	@SideOnly(Side.CLIENT)

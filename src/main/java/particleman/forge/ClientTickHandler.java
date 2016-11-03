@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import particleman.items.ItemParticleGlove;
-import cpw.mods.fml.client.FMLClientHandler;
 
 public class ClientTickHandler
 {
@@ -53,22 +53,22 @@ public class ClientTickHandler
     			mc.getTextureManager().bindTexture(resTerrain);
     			if (fireMode == 0) {
 	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
-	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Blocks.clay.getIcon(0, 0), 65, ySize);
+	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Blocks.CLAY.getIcon(0, 0), 65, ySize);
     			}
     			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, fireMode == 0 ? 0xFFFFFF : 0xAAAAAA);
-    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Blocks.lava.getIcon(0, 0), (int)(val0 / 4.6D), ySize);
+    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Blocks.LAVA.getIcon(0, 0), (int)(val0 / 4.6D), ySize);
     			if (fireMode == 1) {
 	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
-	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.clay.getIcon(0, 0), 65, ySize);
+	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.CLAY.getIcon(0, 0), 65, ySize);
     			}
     			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, fireMode == 1 ? 0xFF0000 : 0xAA0000);
-    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.lava.getIcon(0, 0), (int)(val1 / 4.6D), ySize);
+    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.LAVA.getIcon(0, 0), (int)(val1 / 4.6D), ySize);
     			if (fireMode == 2) {
 	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
-	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.clay.getIcon(0, 0), 65, ySize);
+	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.CLAY.getIcon(0, 0), 65, ySize);
     			}
     			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, fireMode == 2 ? 0xFFFFFF : 0xAAAAAA);
-    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.water.getIcon(0, 0), (int)(val2 / 4.6D), ySize);
+    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.WATER.getIcon(0, 0), (int)(val2 / 4.6D), ySize);
     			
     			//mc.ingameGUI.drawString(mc.fontRenderer, "Mode: " + fireMode, width/2 + 95 + 0, height - 40, 0xFFFFFF);
     		}

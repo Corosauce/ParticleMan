@@ -1,19 +1,18 @@
 package particleman.forge;
 
 import io.netty.buffer.ByteBuf;
-import particleman.items.ItemParticleGlove;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import particleman.items.ItemParticleGlove;
 import CoroUtil.packet.PacketHelper;
 import CoroUtil.util.CoroUtilEntity;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EventHandlerPacket {
 	
@@ -23,7 +22,7 @@ public class EventHandlerPacket {
 	public void onPacketFromServer(FMLNetworkEvent.ClientCustomPacketEvent event) {
 		
 		try {
-			NBTTagCompound nbt = PacketHelper.readNBTTagCompound(event.packet.payload());
+			NBTTagCompound nbt = PacketHelper.readNBTTagCompound(event.getPacket().payload());
 			
 			String packetCommand = nbt.getString("packetCommand");
 			
@@ -38,7 +37,7 @@ public class EventHandlerPacket {
 	
 	@SubscribeEvent
 	public void onPacketFromClient(FMLNetworkEvent.ServerCustomPacketEvent event) {
-		EntityPlayerMP entP = ((NetHandlerPlayServer)event.handler).playerEntity;
+		EntityPlayerMP entP = ((NetHandlerPlayServer)event.getHandler()).playerEntity;
 		
 		try {
 			
