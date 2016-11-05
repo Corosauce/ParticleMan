@@ -21,10 +21,10 @@ import particleman.entities.EntityParticleControllable;
 import particleman.items.ItemParticleGlove;
 
 
-@Mod(modid = "ParticleMan", name="Particle Man", version="v1.0")
+@Mod(modid = "particleman", name="Particle Man", version="v1.0", dependencies="required-after:coroutil")
 public class ParticleMan {
 	
-	@Mod.Instance( value = "ParticleMan" )
+	@Mod.Instance( value = "particleman" )
 	public static ParticleMan instance;
 	public static String modID = "particleman";
     
