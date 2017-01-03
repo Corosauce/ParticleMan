@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -12,7 +13,7 @@ import particleman.items.ItemParticleGlove;
 public class ClientTickHandler
 {
 	public static ResourceLocation resTank = new ResourceLocation(ParticleMan.modID + ":textures/gui/tank.png");
-	public static ResourceLocation resTerrain = TextureMap.locationBlocksTexture;
+	public static ResourceLocation resTerrain = TextureMap.LOCATION_BLOCKS_TEXTURE;
 	
     public static void onRenderTick()
     {
@@ -22,15 +23,15 @@ public class ClientTickHandler
     	
     	if (mc != null && mc.thePlayer != null && (mc.currentScreen == null || debug))
         {
-    		ItemStack is = mc.thePlayer.getCurrentEquippedItem();
+    		ItemStack is = mc.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
     		
     		if (is != null && is.getItem() instanceof ItemParticleGlove && is.hasTagCompound()) {
-    			int fireMode = is.stackTagCompound.getInteger("pm_fireMode");
-    			int val0 = is.stackTagCompound.getInteger("pm_storage_0");
-    			int val1 = is.stackTagCompound.getInteger("pm_storage_1");
-    			int val2 = is.stackTagCompound.getInteger("pm_storage_2");
+    			int fireMode = is.getTagCompound().getInteger("pm_fireMode");
+    			int val0 = is.getTagCompound().getInteger("pm_storage_0");
+    			int val1 = is.getTagCompound().getInteger("pm_storage_1");
+    			int val2 = is.getTagCompound().getInteger("pm_storage_2");
     			
-    			ScaledResolution var8 = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+    			ScaledResolution var8 = new ScaledResolution(mc/*, mc.displayWidth, mc.displayHeight*/);
     	        int width = var8.getScaledWidth();
     	        int height = var8.getScaledHeight();
     			
@@ -46,28 +47,28 @@ public class ClientTickHandler
     			
     			//mc.renderEngine.bindTexture("/mods/ParticleMan/textures/gui/tank.png");
     			mc.getTextureManager().bindTexture(resTank);
-    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xFFFFFF);
+    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, 0xFFFFFF);
     			mc.ingameGUI.drawTexturedModalRect(width/2 + 95 - 4, height - (2+yOffset+6*3), 0, 0, 72, 22);
     			
     			//mc.renderEngine.bindTexture("/terrain.png");
     			mc.getTextureManager().bindTexture(resTerrain);
     			if (fireMode == 0) {
-	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
+	    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
 	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Blocks.CLAY.getIcon(0, 0), 65, ySize);
     			}
-    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, fireMode == 0 ? 0xFFFFFF : 0xAAAAAA);
+    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, fireMode == 0 ? 0xFFFFFF : 0xAAAAAA);
     			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (4+yOffset+ySize*3), Blocks.LAVA.getIcon(0, 0), (int)(val0 / 4.6D), ySize);
     			if (fireMode == 1) {
-	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
+	    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
 	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.CLAY.getIcon(0, 0), 65, ySize);
     			}
-    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, fireMode == 1 ? 0xFF0000 : 0xAA0000);
+    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, fireMode == 1 ? 0xFF0000 : 0xAA0000);
     			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.LAVA.getIcon(0, 0), (int)(val1 / 4.6D), ySize);
     			if (fireMode == 2) {
-	    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
+	    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
 	    			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.CLAY.getIcon(0, 0), 65, ySize);
     			}
-    			mc.ingameGUI.drawString(mc.fontRenderer, "", width/2 + 95 + 0, height - 10, fireMode == 2 ? 0xFFFFFF : 0xAAAAAA);
+    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, fireMode == 2 ? 0xFFFFFF : 0xAAAAAA);
     			mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.WATER.getIcon(0, 0), (int)(val2 / 4.6D), ySize);
     			
     			//mc.ingameGUI.drawString(mc.fontRenderer, "Mode: " + fireMode, width/2 + 95 + 0, height - 40, 0xFFFFFF);

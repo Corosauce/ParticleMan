@@ -50,11 +50,11 @@ public class EventHandlerPacket {
 	        	ItemStack is = entP.inventory.getStackInSlot(slotID);
 	        	
 	        	if (is != null && is.getItem() instanceof ItemParticleGlove) {
-	        		if (is.stackTagCompound == null) is.stackTagCompound = new NBTTagCompound();
+	        		if (is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
 	        		if (commandID == 0) {
-	        			int fireMode = is.stackTagCompound.getInteger("pm_fireMode") + 1;
+	        			int fireMode = is.getTagCompound().getInteger("pm_fireMode") + 1;
 	        			if (fireMode >= 3) fireMode = 0;
-	        			is.stackTagCompound.setInteger("pm_fireMode", fireMode);
+	        			is.getTagCompound().setInteger("pm_fireMode", fireMode);
 	        			
 		        	} else if (commandID == 1) {
 		        		((ItemParticleGlove)is.getItem()).createParticleFromInternal(entP, is, true, 5);

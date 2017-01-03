@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -80,7 +81,7 @@ public class PMKeybindHandler {
         	
         	if (mc != null && mc.thePlayer != null && mc.currentScreen == null)
             {
-        		ItemStack is = mc.thePlayer.getCurrentEquippedItem();
+        		ItemStack is = mc.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
         		
         		if (is != null && is.getItem() instanceof ItemParticleGlove/* && is.hasTagCompound()*/) {
         			sendPacket(commandID, mc.thePlayer.inventory.currentItem);

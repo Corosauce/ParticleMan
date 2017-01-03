@@ -7,8 +7,10 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -16,6 +18,8 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,6 +28,7 @@ import particleman.entities.EntityParticleControllable;
 import particleman.forge.ParticleMan;
 import CoroUtil.util.CoroUtilBlock;
 import CoroUtil.util.CoroUtilEntity;
+import particleman.forge.SoundRegistry;
 
 public class ItemParticleGlove extends Item {
 
@@ -80,10 +85,10 @@ public class ItemParticleGlove extends Item {
 	}
 	
 	public int createParticleFromInternal(EntityPlayer player, ItemStack item, boolean forShield, int createCount) {
-		int fireMode = item.stackTagCompound.getInteger("pm_fireMode");
+		int fireMode = item.getTagCompound().getInteger("pm_fireMode");
 		if (!player.worldObj.isRemote) {
 			
-			int curAmount = item.stackTagCompound.getInteger("pm_storage_" + fireMode);
+			int curAmount = item.getTagCompound().getInteger("pm_storage_" + fireMode);
 			
 			//int shieldDeployRateFactor = 5;
 			
@@ -93,7 +98,7 @@ public class ItemParticleGlove extends Item {
 				
 				if (fireMode == 2) deplete /= 3;
 				
-				item.stackTagCompound.setInteger("pm_storage_" + fireMode, Math.max(curAmount - (deplete * createCount), 0));
+				item.getTagCompound().setInteger("pm_storage_" + fireMode, Math.max(curAmount - (deplete * createCount), 0));
 				
 				for (int i = 0; i < createCount; i++) {
 					EntityParticleControllable particle = new EntityParticleControllable(player.worldObj, CoroUtilEntity.getName(player), fireMode);
@@ -106,10 +111,12 @@ public class ItemParticleGlove extends Item {
 					if (forShield) {
 						playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
 						particle.moveMode = 1;
-						player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":fire_shoot", 0.9F, player.worldObj.rand.nextFloat());
+						//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":fire_shoot", 0.9F, player.worldObj.rand.nextFloat());
+						player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("fire_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
 					} else {
 						fireParticle(player, particle);
-						player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
+						//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
+						player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
 					}
 				}
 			}
@@ -161,7 +168,8 @@ public class ItemParticleGlove extends Item {
 		for (int i = 0; i < playerParticles.get(CoroUtilEntity.getName(player)).size(); i++) {
 			EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 			if (particle.getDistanceToEntity(player) < 6D) {
-				player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
+				//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
+				player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
 				//EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(0);
 				
 				playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
@@ -230,7 +238,8 @@ public class ItemParticleGlove extends Item {
 		}
 		
 		if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(3F);
-		player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":shockwave_echo_loud", 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F));
+		//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":shockwave_echo_loud", 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F));
+		player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("shockwave_echo_loud"), SoundCategory.PLAYERS, 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F), false);
 		
 		NBTTagCompound plData = player.getEntityData();
 		if (plData == null) plData = new NBTTagCompound();
@@ -240,36 +249,44 @@ public class ItemParticleGlove extends Item {
 			plData.setInteger("particleMode", 0);
 		}
 	}
-	
+
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+	public EnumActionResult onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, BlockPos posHit, EnumHand hand, EnumFacing facing, float par8, float par9, float par10)
     {
-		if (par1ItemStack.stackTagCompound == null) par1ItemStack.stackTagCompound = new NBTTagCompound();
+		if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
 		//if (!par3World.isRemote) {
 			if (par2EntityPlayer.getFoodStats().getFoodLevel() >= 6) {
 				check(CoroUtilEntity.getName(par2EntityPlayer));
-				Block id = par3World.getBlock(par4, par5, par6);
-				Block id2 = par3World.getBlock(par4, par5+1, par6);
-				if (!CoroUtilBlock.isAir(id)) {
+
+				/*Block id = par3World.getBlock(par4, par5, par6);
+				Block id2 = par3World.getBlock(par4, par5+1, par6);*/
+				BlockPos pos = posHit;//new BlockPos(par4, par5, par6);
+				BlockPos pos2 = posHit.add(0, 1, 0);//new BlockPos(par4, par5+1, par6);
+				IBlockState state = par3World.getBlockState(pos);
+				IBlockState state2 = par3World.getBlockState(pos2);
+				if (!CoroUtilBlock.isAir(state.getBlock())) {
 					int spawnType = -1;
-					if (id == Blocks.TORCH || id2 == Blocks.FIRE) {
+					if (state.getBlock() == Blocks.TORCH || state2.getBlock() == Blocks.FIRE) {
 						spawnType = 0;
-						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grab", 0.9F, par3World.rand.nextFloat());
-					} else if (id == Blocks.REDSTONE_TORCH || id == Blocks.REDSTONE_ORE || id == Blocks.REDSTONE_WIRE) {
+						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grab", 0.9F, par3World.rand.nextFloat());
+						par3World.playSound(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("fire_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat(), false);
+					} else if (state.getBlock() == Blocks.REDSTONE_TORCH || state.getBlock() == Blocks.REDSTONE_ORE || state.getBlock() == Blocks.REDSTONE_WIRE) {
 						spawnType = 1;
-						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
-					} else if (id2.getMaterial() == Material.WATER) {
+						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
+						par3World.playSound(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat(), false);
+					} else if (state2.getMaterial() == Material.WATER) {
 						spawnType = 2;
-						par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
+						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
+						par3World.playSound(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat(), false);
 					}
 					
 					if (spawnType != -1) {
 						if (!par3World.isRemote) {
 							
-							int curAmount = par1ItemStack.stackTagCompound.getInteger("pm_storage_" + spawnType);
+							int curAmount = par1ItemStack.getTagCompound().getInteger("pm_storage_" + spawnType);
 							
 							if (curAmount < maxStorage) {
-								par1ItemStack.stackTagCompound.setInteger("pm_storage_" + spawnType, Math.min(curAmount + fillRate, maxStorage));
+								par1ItemStack.getTagCompound().setInteger("pm_storage_" + spawnType, Math.min(curAmount + fillRate, maxStorage));
 								if (!par2EntityPlayer.capabilities.isCreativeMode) par2EntityPlayer.getFoodStats().addExhaustion(1F);
 							}
 							
@@ -287,14 +304,14 @@ public class ItemParticleGlove extends Item {
 							
 						}
 						
-						return true;
+						return EnumActionResult.SUCCESS;
 					} else {
-						onItemRightClick(par1ItemStack, par3World, par2EntityPlayer);
-						return true;
+						onItemRightClick(par1ItemStack, par3World, par2EntityPlayer, EnumHand.MAIN_HAND);
+						return EnumActionResult.SUCCESS;
 					}
 				}
 			}
-			return false;
+			return EnumActionResult.FAIL;
 		//} else {
 			//onItemRightClick(par1ItemStack, par3World, par2EntityPlayer);
 		//}
@@ -304,22 +321,22 @@ public class ItemParticleGlove extends Item {
 	
 	@Override
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if (par1ItemStack.stackTagCompound == null) par1ItemStack.stackTagCompound = new NBTTagCompound();
+		if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
 		
 		/*if (!par2World.isRemote && par3Entity instanceof EntityPlayer) {
 			
 			if (playerParticles.get(((EntityPlayer)par3Entity).username) != null && playerParticles.get(((EntityPlayer)par3Entity).username).size() > 0) {
 				EntityParticleControllable particle = playerParticles.get(((EntityPlayer)par3Entity).username).get(0);
 				if (particle.getDistanceToEntity(par3Entity) < 6D) {
-					par1ItemStack.stackTagCompound.setInteger("pm_nextParticleInList", particle.type);
+					par1ItemStack.getTagCompound().setInteger("pm_nextParticleInList", particle.type);
 					if (par3Entity.motionY > -0.2D) {
 						par3Entity.fallDistance = 0;
 					}
 				} else {
-					par1ItemStack.stackTagCompound.setInteger("pm_nextParticleInList", -1);
+					par1ItemStack.getTagCompound().setInteger("pm_nextParticleInList", -1);
 				}
 			} else {
-				par1ItemStack.stackTagCompound.setInteger("pm_nextParticleInList", -1);
+				par1ItemStack.getTagCompound().setInteger("pm_nextParticleInList", -1);
 			}
 		}*/
 		
@@ -366,10 +383,10 @@ public class ItemParticleGlove extends Item {
 			}
 		}
 	}
-	
+
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if (par1ItemStack.stackTagCompound == null) par1ItemStack.stackTagCompound = new NBTTagCompound();
+	public ActionResult<ItemStack> onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, EnumHand hand) {
+		if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
 		
 		if (!par2World.isRemote) {
 			check(CoroUtilEntity.getName(par3EntityPlayer));
@@ -377,15 +394,15 @@ public class ItemParticleGlove extends Item {
 				if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6) makeShockwave(par3EntityPlayer);
 			} else {
 				int chargeAmount = 1;
-				//par1ItemStack.stackTagCompound.setInteger("pm_shootType", );
+				//par1ItemStack.getTagCompound().setInteger("pm_shootType", );
 				createParticleFromInternal(par3EntityPlayer, par1ItemStack, false, chargeAmount);
 			}
 		} else {
 			//client side prediction, and client side movement for player
-			//int nextParticle = par1ItemStack.stackTagCompound.getInteger("pm_nextParticleInList");
-			int fireMode = par1ItemStack.stackTagCompound.getInteger("pm_fireMode");
+			//int nextParticle = par1ItemStack.getTagCompound().getInteger("pm_nextParticleInList");
+			int fireMode = par1ItemStack.getTagCompound().getInteger("pm_fireMode");
 			if (fireMode == 2) {
-				int curAmount = par1ItemStack.stackTagCompound.getInteger("pm_storage_" + fireMode);
+				int curAmount = par1ItemStack.getTagCompound().getInteger("pm_storage_" + fireMode);
 				if (curAmount > 0) {
 					if (par3EntityPlayer.isSneaking()) {
 						
@@ -407,21 +424,22 @@ public class ItemParticleGlove extends Item {
 				}
 			}
 		}
-		
-		return par1ItemStack;
+
+		return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer, hand);
 	}
 	
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
     {
-		int fireMode = stack.stackTagCompound.getInteger("pm_fireMode");
+		int fireMode = stack.getTagCompound().getInteger("pm_fireMode");
 		if (!player.worldObj.isRemote) {
-			int curAmount = stack.stackTagCompound.getInteger("pm_storage_" + fireMode);
+			int curAmount = stack.getTagCompound().getInteger("pm_storage_" + fireMode);
 			if (curAmount > 0) {
-				stack.stackTagCompound.setInteger("pm_storage_" + fireMode, Math.max(curAmount - depleteRate, 0));
+				stack.getTagCompound().setInteger("pm_storage_" + fireMode, Math.max(curAmount - depleteRate, 0));
 				Element.affectEntity(entity, player, fireMode);
 				if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(1F);
-				player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
+				//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
+				player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
 			}
 		}
         return false;
@@ -455,11 +473,11 @@ public class ItemParticleGlove extends Item {
 		
 		Random rand = new Random();
 		float speed = 0.05F;
-		EntityFX entFX = null;
+		Particle entFX = null;
+
+		Minecraft mc = Minecraft.getMinecraft();
 		
-		
-		
-		int fireMode = par1ItemStack.stackTagCompound.getInteger("pm_fireMode");
+		int fireMode = par1ItemStack.getTagCompound().getInteger("pm_fireMode");
 		
 		int chance = 1;
 		if (!charging) {
@@ -471,17 +489,20 @@ public class ItemParticleGlove extends Item {
 		
 		if (rand.nextInt(chance) != 0) return;
 		
-		int curAmount = par1ItemStack.stackTagCompound.getInteger("pm_storage_" + fireMode);
+		int curAmount = par1ItemStack.getTagCompound().getInteger("pm_storage_" + fireMode);
 		if (curAmount > 0) {
 			if (fireMode == 0) {
-				entFX = new EntityFlameFX(par2World, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+				//entFX = new EntityFlameFX(par2World, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+				int id = EnumParticleTypes.FLAME.getParticleID();
+				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
 			} else if (fireMode == 1) {
-				entFX = new EntityReddustFX(par2World, posX, posY, posZ, 1F, 1F, 0F, 0F);
-				/*entFX.setRBGColorF(0, 0, 0.5F + (float)(Math.random() * 0.5F));
-				entFX.setRBGColorF(0.7F + (float)(Math.random() * 0.5F), 0.5F + (float)(Math.random() * 0.5F), 0.5F + (float)(Math.random() * 0.5F));
-				entFX.setRBGColorF((float)Math.random(), (float)Math.random(), (float)Math.random());*/
+				//entFX = new EntityReddustFX(par2World, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				int id = EnumParticleTypes.REDSTONE.getParticleID();
+				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
 			} else if (fireMode == 2) {
-				entFX = new EntityReddustFX(par2World, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				//entFX = new EntityReddustFX(par2World, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				int id = EnumParticleTypes.REDSTONE.getParticleID();
+				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
 				entFX.setRBGColorF(0, 0, 0.5F + (float)(Math.random() * 0.5F));
 			}
 		}

@@ -7,15 +7,23 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleFlame;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -48,7 +56,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public int awayFromOwnerTicks = 0;
 	
 	@SideOnly(Side.CLIENT)
-	public List<EntityFX> particles;
+	public List<Particle> particles;
 	
 	public EntityParticleControllable(World par1World) {
 		super(par1World);
@@ -186,15 +194,19 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         	if (isInWater()) {
 	        	if (type == 0) {
 	        		setDead();
-	        		worldObj.playSoundEffect(posX, posY, posZ, "random.fizz", 0.5F, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+	        		//worldObj.playSoundEffect(posX, posY, posZ, "random.fizz", 0.5F, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+					worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.AMBIENT, 0.5F, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F, false);
 	        	}
         	}
         	
-        	Block id = worldObj.getBlock((int)posX, (int)posY, (int)posZ);
+        	//Block id = worldObj.getBlock((int)posX, (int)posY, (int)posZ);
+			BlockPos pos = new BlockPos(posX, posY, posZ);
+			IBlockState state = worldObj.getBlockState(pos);
         	
         	if (type == 2) {
-        		if (id == Blocks.FIRE) {
-            		worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.AIR);
+        		if (state.getBlock() == Blocks.FIRE) {
+            		//worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.AIR);
+					worldObj.setBlockState(pos, Blocks.AIR.getDefaultState());
             		health--;
             	}
         	}
@@ -245,14 +257,15 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            		var10.extinguish();
 	            	}
 	            	if (state == 0 && moveMode == 0) {
-	            		ItemStack is = entP.getCurrentEquippedItem();
+	            		//ItemStack is = entP.getCurrentEquippedItem();
+						ItemStack is = entP.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
 			        	
 			        	if (is != null && is.getItem() instanceof ItemParticleGlove) {
-			        		if (is.stackTagCompound == null) is.stackTagCompound = new NBTTagCompound();
-			        		int curAmount = is.stackTagCompound.getInteger("pm_storage_" + type);
+			        		if (is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
+			        		int curAmount = is.getTagCompound().getInteger("pm_storage_" + type);
 							
 							if (curAmount < ItemParticleGlove.maxStorage) {
-								is.stackTagCompound.setInteger("pm_storage_" + type, Math.min(curAmount + ItemParticleGlove.depleteRate, ItemParticleGlove.maxStorage));
+								is.getTagCompound().setInteger("pm_storage_" + type, Math.min(curAmount + ItemParticleGlove.depleteRate, ItemParticleGlove.maxStorage));
 							}
 							
 							this.setDead();
@@ -278,35 +291,42 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public void manageParticles() {
 		Random rand = new Random();
 		float speed = 0.05F;
-		EntityFX entFX = null;
-		
+		Particle entFX = null;
+
+		Minecraft mc = Minecraft.getMinecraft();
+
 		//System.out.println("particles.size(): " + particles.size());
 		
-		if (particles == null) particles = new LinkedList<EntityFX>();
+		if (particles == null) particles = new LinkedList<>();
 		
 		if (particles.size() < 15) {
 			if (type == 0) {
-				entFX = new EntityFlameFX(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+				//entFX = new ParticleFlame(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+				int id = EnumParticleTypes.FLAME.getParticleID();
+				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+
 			} else if (type == 1) {
-				entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
-				/*entFX.setRBGColorF(0, 0, 0.5F + (float)(Math.random() * 0.5F));
-				entFX.setRBGColorF(0.7F + (float)(Math.random() * 0.5F), 0.5F + (float)(Math.random() * 0.5F), 0.5F + (float)(Math.random() * 0.5F));
-				entFX.setRBGColorF((float)Math.random(), (float)Math.random(), (float)Math.random());*/
+				//entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				int id = EnumParticleTypes.REDSTONE.getParticleID();
+				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
 			} else if (type == 2) {
-				entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				//entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				int id = EnumParticleTypes.REDSTONE.getParticleID();
+				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
 				entFX.setRBGColorF(0, 0, 0.5F + (float)(Math.random() * 0.5F));
 			}
 		}
-		
+
 		if (entFX != null) {
-			Minecraft.getMinecraft().effectRenderer.addEffect(entFX);
+			//done via spawnEffectParticle now
+			//Minecraft.getMinecraft().effectRenderer.addEffect(entFX);
 			particles.add(entFX);
 		}
 		
 		for (int i = 0; i < particles.size(); i++) {
-			EntityFX particle = particles.get(i);
+			Particle particle = particles.get(i);
 			
-			if (particle == null || particle.isDead) {
+			if (particle == null || !particle.isAlive()) {
 				particles.remove(particle);
 			} else {
 				
