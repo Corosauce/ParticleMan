@@ -1,6 +1,7 @@
 package particleman.client;
 
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,6 +15,10 @@ public class RenderParticleControllable extends Render
 	public float particleGreen;
 	public float particleBlue;
 	public float particleAlpha;
+
+	public RenderParticleControllable(RenderManager renderManager) {
+		super(renderManager);
+	}
 	
     public void doRender(Entity var1, double par2, double var4, double var6, float var8, float var9)
     {

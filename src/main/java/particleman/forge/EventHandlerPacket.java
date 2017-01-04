@@ -41,7 +41,7 @@ public class EventHandlerPacket {
 		
 		try {
 			
-			ByteBuf buffer = event.packet.payload();
+			ByteBuf buffer = event.getPacket().payload();
 			
 	        //if ("PMGloveCommand".equals(packet.channel)) {
 	        	int commandID = buffer.readInt();

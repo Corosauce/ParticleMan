@@ -1,5 +1,6 @@
 package particleman.forge;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,7 +28,7 @@ public class ClientProxy extends CommonProxy
     {
         super.init(pMod);
         
-        RenderingRegistry.registerEntityRenderingHandler(EntityParticleControllable.class, new RenderParticleControllable());
+        RenderingRegistry.registerEntityRenderingHandler(EntityParticleControllable.class, new RenderParticleControllable(Minecraft.getMinecraft().getRenderManager()));
     }
     
 }

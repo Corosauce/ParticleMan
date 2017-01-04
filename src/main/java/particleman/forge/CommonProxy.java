@@ -33,16 +33,13 @@ public class CommonProxy implements IGuiHandler
         
         pMod.itemGlove = (new ItemParticleGlove()).setCreativeTab(CreativeTabs.MISC);
         pMod.itemGlove.setUnlocalizedName(ParticleMan.modID + ":particleglove");
-        pMod.itemGlove.setTextureName(ParticleMan.modID + ":particleglove");
+        //pMod.itemGlove.setTextureName(ParticleMan.modID + ":particleglove");
         
         GameRegistry.registerItem(pMod.itemGlove, "particleglove");
         
-        LanguageRegistry.addName(pMod.itemGlove, "Particle Glove");
+        //LanguageRegistry.addName(pMod.itemGlove, "Particle Glove");
         GameRegistry.addRecipe(new ItemStack(pMod.itemGlove), new Object[] {" LL", "LRR", "LRD", Character.valueOf('L'), Items.LEATHER, Character.valueOf('R'), Items.REDSTONE, Character.valueOf('D'), Items.DIAMOND});
-        
-        
-        //TickRegistry.registerTickHandler(new ServerTickHandler(), Side.SERVER);
-        
+
     	EntityRegistry.registerModEntity(EntityParticleControllable.class, "EntityParticleControllable", entityId++, pMod, 32, 3, true);
 
         SoundRegistry.init();

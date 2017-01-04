@@ -7,6 +7,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -54,7 +55,7 @@ public class PMKeybindHandler {
     	//retract shield fully
     	
     	//key release management
-    	if (keyParticleMode.getIsKeyPressed()) {
+    	if (keyParticleMode.isKeyDown()) {
     		wasKeyPressed_keyParticleMode = true;
     	} else {
     		if (wasKeyPressed_keyParticleMode) {
@@ -63,7 +64,7 @@ public class PMKeybindHandler {
     		wasKeyPressed_keyParticleMode = false;
     	}
     	
-    	if (keyShieldToggle.getIsKeyPressed()) {
+    	if (keyShieldToggle.isKeyDown()) {
     		wasKeyPressed_keyShieldToggle = true;
     	} else {
     		if (wasKeyPressed_keyShieldToggle) {
@@ -101,7 +102,7 @@ public class PMKeybindHandler {
         	ex.printStackTrace();
         }
 
-        return new FMLProxyPacket(byteBuf, parChannel);
+        return new FMLProxyPacket(new PacketBuffer(byteBuf), parChannel);
     }
     
     public static void sendPacket(int parCommand, int parSlot) {
@@ -114,7 +115,7 @@ public class PMKeybindHandler {
     		ex.printStackTrace();
     	}
     	
-    	FMLProxyPacket packet = new FMLProxyPacket(byteBuf, ParticleMan.eventChannelName);
+    	FMLProxyPacket packet = new FMLProxyPacket(new PacketBuffer(byteBuf), ParticleMan.eventChannelName);
     	
     	ParticleMan.eventChannel.sendToServer(packet);
 	}

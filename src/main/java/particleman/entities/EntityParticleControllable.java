@@ -13,6 +13,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFlame;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -20,6 +21,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -57,6 +61,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	
 	@SideOnly(Side.CLIENT)
 	public List<Particle> particles;
+
+    private static final DataParameter<Integer> DP_STATE = EntityDataManager.<Integer>createKey(EntityParticleControllable.class, DataSerializers.VARINT);
 	
 	public EntityParticleControllable(World par1World) {
 		super(par1World);
@@ -79,7 +85,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	@Override
 	protected void entityInit() {
 		
-		this.dataWatcher.addObject(16, Byte.valueOf((byte)state));
+		//this.dataWatcher.addObject(16, Byte.valueOf((byte)state));
+        this.getDataManager().register(DP_STATE, Integer.valueOf(0));
 
 	}
 	
@@ -125,9 +132,9 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			
 		}
 		if (worldObj.isRemote) {
-			state = this.dataWatcher.getWatchableObjectByte(16);
+            state = this.getDataManager().get(DP_STATE);
 		} else {
-			this.dataWatcher.updateObject(16, Byte.valueOf((byte)state));
+            this.getDataManager().set(DP_STATE, state);
 		}
 		if (!worldObj.isRemote) {
 			if (state == 0) {
