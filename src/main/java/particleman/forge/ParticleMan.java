@@ -194,6 +194,10 @@ public class ParticleMan {
     		if (posY - 0.2D < newY + 0.2D) motionY += /*rand.nextFloat() * */0.01F;
     		
     	}
+
+		CoroUtilEntOrParticle.setMotionX(source, motionX);
+		CoroUtilEntOrParticle.setMotionY(source, motionY);
+		CoroUtilEntOrParticle.setMotionZ(source, motionZ);
         
 	}
     

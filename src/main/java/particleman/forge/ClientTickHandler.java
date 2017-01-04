@@ -71,7 +71,7 @@ public class ClientTickHandler
     			}
     			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, fireMode == 1 ? 0xFF0000 : 0xAA0000);
     			//mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (2+yOffset+ySize*2), Blocks.LAVA.getIcon(0, 0), (int)(val1 / 4.6D), ySize);
-				mc.ingameGUI.drawTexturedModalRect(width/2 + 95 + 0, height - (2+yOffset+ySize*2), texturemap.getAtlasSprite("minecraft:blocks/lava_still"), (int)(val0 / 4.6D), ySize);
+				mc.ingameGUI.drawTexturedModalRect(width/2 + 95 + 0, height - (2+yOffset+ySize*2), texturemap.getAtlasSprite("minecraft:blocks/lava_still"), (int)(val1 / 4.6D), ySize);
     			if (fireMode == 2) {
 	    			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, 0xCCCCCC);
 	    			//mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.CLAY.getIcon(0, 0), 65, ySize);
@@ -79,7 +79,7 @@ public class ClientTickHandler
     			}
     			mc.ingameGUI.drawString(mc.fontRendererObj, "", width/2 + 95 + 0, height - 10, fireMode == 2 ? 0xFFFFFF : 0xAAAAAA);
     			//mc.ingameGUI.drawTexturedModelRectFromIcon(width/2 + 95 + 0, height - (yOffset+ySize), Blocks.WATER.getIcon(0, 0), (int)(val2 / 4.6D), ySize);
-				mc.ingameGUI.drawTexturedModalRect(width/2 + 95 + 0, height - (yOffset+ySize), texturemap.getAtlasSprite("minecraft:blocks/water_still"), (int)(val0 / 4.6D), ySize);
+				mc.ingameGUI.drawTexturedModalRect(width/2 + 95 + 0, height - (yOffset+ySize), texturemap.getAtlasSprite("minecraft:blocks/water_still"), (int)(val2 / 4.6D), ySize);
     			
     			//mc.ingameGUI.drawString(mc.fontRenderer, "Mode: " + fireMode, width/2 + 95 + 0, height - 40, 0xFFFFFF);
     		}

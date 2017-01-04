@@ -112,11 +112,11 @@ public class ItemParticleGlove extends Item {
 						playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
 						particle.moveMode = 1;
 						//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":fire_shoot", 0.9F, player.worldObj.rand.nextFloat());
-						player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("fire_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
+						player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("fire_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat());
 					} else {
 						fireParticle(player, particle);
 						//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
-						player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
+						player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat());
 					}
 				}
 			}
@@ -169,7 +169,7 @@ public class ItemParticleGlove extends Item {
 			EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 			if (particle.getDistanceToEntity(player) < 6D) {
 				//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
-				player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
+				player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat());
 				//EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(0);
 				
 				playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
@@ -239,7 +239,7 @@ public class ItemParticleGlove extends Item {
 		
 		if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(3F);
 		//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":shockwave_echo_loud", 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F));
-		player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("shockwave_echo_loud"), SoundCategory.PLAYERS, 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F), false);
+		player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("shockwave_echo_loud"), SoundCategory.PLAYERS, 0.7F, 1F - (player.worldObj.rand.nextFloat() * 0.2F));
 		
 		NBTTagCompound plData = player.getEntityData();
 		if (plData == null) plData = new NBTTagCompound();
@@ -269,15 +269,15 @@ public class ItemParticleGlove extends Item {
 					if (state.getBlock() == Blocks.TORCH || state2.getBlock() == Blocks.FIRE) {
 						spawnType = 0;
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grab", 0.9F, par3World.rand.nextFloat());
-						par3World.playSound(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("fire_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat(), false);
+						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("fire_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
 					} else if (state.getBlock() == Blocks.REDSTONE_TORCH || state.getBlock() == Blocks.REDSTONE_ORE || state.getBlock() == Blocks.REDSTONE_WIRE) {
 						spawnType = 1;
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
-						par3World.playSound(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat(), false);
+						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
 					} else if (state2.getMaterial() == Material.WATER) {
 						spawnType = 2;
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
-						par3World.playSound(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat(), false);
+						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
 					}
 					
 					if (spawnType != -1) {
@@ -439,7 +439,7 @@ public class ItemParticleGlove extends Item {
 				Element.affectEntity(entity, player, fireMode);
 				if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(1F);
 				//player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.worldObj.rand.nextFloat());
-				player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat(), false);
+				player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.worldObj.rand.nextFloat());
 			}
 		}
         return false;

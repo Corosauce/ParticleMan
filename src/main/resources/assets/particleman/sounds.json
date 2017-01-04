@@ -2,31 +2,31 @@
   "fire_grab": {
     "category": "block",
     "sounds": [
-      "fire_grab"
+      "particleman:fire_grab"
     ]
   },
   "fire_shoot": {
     "category": "block",
     "sounds": [
-      "fire_shoot"
+      "particleman:fire_shoot"
     ]
   },
   "redstone_grab": {
     "category": "block",
     "sounds": [
-      "redstone_grab"
+      "particleman:redstone_grab"
     ]
   },
   "redstone_shoot": {
     "category": "block",
     "sounds": [
-      "redstone_shoot"
+      "particleman:redstone_shoot"
     ]
   },
   "shockwave_echo_loud": {
     "category": "block",
     "sounds": [
-      "shockwave_echo_loud"
+      "particleman:shockwave_echo_loud"
     ]
   }
   

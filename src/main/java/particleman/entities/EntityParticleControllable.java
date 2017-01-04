@@ -316,6 +316,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 				//entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
 				int id = EnumParticleTypes.REDSTONE.getParticleID();
 				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
+				entFX.setRBGColorF(0.5F + (float)(Math.random() * 0.5F), 0, 0);
 			} else if (type == 2) {
 				//entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
 				int id = EnumParticleTypes.REDSTONE.getParticleID();

@@ -22,8 +22,8 @@ import particleman.items.ItemParticleGlove;
 @SideOnly(Side.CLIENT)
 public class PMKeybindHandler {
 
-	public static KeyBinding keyParticleMode = new KeyBinding("PM_ParticleMode", Keyboard.KEY_K, "key.categories.gameplay");
-	public static KeyBinding keyShieldToggle = new KeyBinding("PM_ShieldToggle", Keyboard.KEY_L, "key.categories.gameplay");
+	public static KeyBinding keyParticleMode = new KeyBinding("ParticleMode", Keyboard.KEY_K, "key.categories.particleman");
+	public static KeyBinding keyShieldToggle = new KeyBinding("ShieldToggle", Keyboard.KEY_L, "key.categories.particleman");
 	
 	public static boolean wasKeyPressed_keyParticleMode = false;
 	public static boolean wasKeyPressed_keyShieldToggle = false;

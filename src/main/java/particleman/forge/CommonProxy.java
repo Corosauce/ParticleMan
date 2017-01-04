@@ -3,7 +3,9 @@ package particleman.forge;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -32,10 +34,12 @@ public class CommonProxy implements IGuiHandler
         mod = pMod;
         
         pMod.itemGlove = (new ItemParticleGlove()).setCreativeTab(CreativeTabs.MISC);
-        pMod.itemGlove.setUnlocalizedName(ParticleMan.modID + ":particleglove");
+        //pMod.itemGlove.setUnlocalizedName(ParticleMan.modID + ":particleglove");
         //pMod.itemGlove.setTextureName(ParticleMan.modID + ":particleglove");
         
-        GameRegistry.registerItem(pMod.itemGlove, "particleglove");
+        //GameRegistry.registerItem(pMod.itemGlove, "particleglove");
+
+        registerItem(pMod.itemGlove, "particleglove");
         
         //LanguageRegistry.addName(pMod.itemGlove, "Particle Glove");
         GameRegistry.addRecipe(new ItemStack(pMod.itemGlove), new Object[] {" LL", "LRR", "LRD", Character.valueOf('L'), Items.LEATHER, Character.valueOf('R'), Items.REDSTONE, Character.valueOf('D'), Items.DIAMOND});
@@ -56,5 +60,23 @@ public class CommonProxy implements IGuiHandler
 			int x, int y, int z) {
 		return null;
 	}
+
+    private Item registerItem(Item item, String name) {
+        item.setUnlocalizedName(getNamePrefixed(name));
+        item.setRegistryName(new ResourceLocation(ParticleMan.modID, name));
+
+        GameRegistry.register(item);
+        //item.setCreativeTab(tab);
+        registerItemVariantModel(item, name, 0);
+
+        return item;
+    }
+
+    public void registerItemVariantModel(Item item, String name, int metadata) {}
+    public void registerItemVariantModel(Item item, String registryName, int metadata, String variantName) {}
+
+    public String getNamePrefixed(String name) {
+        return ParticleMan.modID + "." + name;
+    }
 
 }
