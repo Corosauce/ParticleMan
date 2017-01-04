@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import CoroUtil.util.CoroUtilEntOrParticle;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -46,12 +49,22 @@ public class ParticleMan {
     	
     }
     
-    public static void spinAround(Entity source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int controlType, int mode) {
+    public static void spinAround(Object source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int controlType, int mode) {
     	Random rand = new Random();
-    	
+
+		World world = center.worldObj;
+
+    	double motionX = CoroUtilEntOrParticle.getMotionX(source);
+		double motionY = CoroUtilEntOrParticle.getMotionY(source);
+		double motionZ = CoroUtilEntOrParticle.getMotionZ(source);
+
+		double posX = CoroUtilEntOrParticle.getPosX(source);
+		double posY = CoroUtilEntOrParticle.getPosY(source);
+		double posZ = CoroUtilEntOrParticle.getPosZ(source);
+
     	if (controlType == 0) {
 			float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
-			float angle2 = (-center.rotationYaw + 65F + ((index*60) + source.worldObj.getWorldTime() % 360)) * 0.01745329F;
+			float angle2 = (-center.rotationYaw + 65F + ((index*60) + world.getWorldTime() % 360)) * 0.01745329F;
 			
 			float dist = distOffset;
 			
@@ -64,8 +77,8 @@ public class ParticleMan {
 			
 			float i = index; //use for particleindex, to offset position
 			
-			float range1 = (float) (Math.sin(((source.worldObj.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
-	        float range2 = (float) (Math.cos(((source.worldObj.getWorldTime() - (i*30.5F)) * (angleRateY * 0.01745329F))) * radius); 
+			float range1 = (float) (Math.sin(((world.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
+	        float range2 = (float) (Math.cos(((world.getWorldTime() - (i*30.5F)) * (angleRateY * 0.01745329F))) * radius);
 			
 	        /*source.posX = ;
 	        source.posY = ;
@@ -85,36 +98,43 @@ public class ParticleMan {
 	        
 	        float speed2 = 0.05F;
 	    	
-	    	double vecX = x - source.posX;
-	    	double vecY = y - source.posY;
-	    	double vecZ = z - source.posZ;
+	    	double vecX = x - posX;
+	    	double vecY = y - posY;
+	    	double vecZ = z - posZ;
 	        
 	        double dist2 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
-	        source.motionX += vecX / dist2 * speed2;
-	        source.motionY += vecY / dist2 * speed2;
-	        source.motionZ += vecZ / dist2 * speed2;
+	        motionX += vecX / dist2 * speed2;
+	        motionY += vecY / dist2 * speed2;
+	        motionZ += vecZ / dist2 * speed2;
 	        
 	        if (dist2 < 1D) {
-	        	source.motionX *= 0.8F;
-		        source.motionY *= 0.8F;
-		        source.motionZ *= 0.8F;
+	        	motionX *= 0.8F;
+		        motionY *= 0.8F;
+		        motionZ *= 0.8F;
 	        } else if (dist2 > 10D) {
-	        	source.setPosition(center.posX, center.posY + 0.68, center.posZ);
-	        	source.motionX = center.motionX * 0.99F;
-		        source.motionY = center.motionY * 0.99F;
-		        source.motionZ = center.motionZ * 0.99F;
+				if (source instanceof Entity) {
+					((Entity)source).setPosition(center.posX, center.posY + 0.68, center.posZ);
+				} else {
+					CoroUtilEntOrParticle.setPosX(source, center.posX);
+					CoroUtilEntOrParticle.setPosY(source, center.posY + 0.68);
+					CoroUtilEntOrParticle.setPosZ(source, center.posZ);
+				}
+
+	        	motionX = center.motionX * 0.99F;
+		        motionY = center.motionY * 0.99F;
+		        motionZ = center.motionZ * 0.99F;
 	        } else if (dist2 > 2D) {
 	        	//source.setPosition(center.posX, center.posY + 0.68, center.posZ);
-	        	source.motionX += center.motionX;
-		        source.motionY += center.motionY;
-		        source.motionZ += center.motionZ;
+	        	motionX += center.motionX;
+		        motionY += center.motionY;
+		        motionZ += center.motionZ;
 	        } else {
 	        	
 	        }
 	        
-	        source.motionX *= 0.95F;
-	        source.motionY *= 0.95F;
-	        source.motionZ *= 0.95F;
+	        motionX *= 0.95F;
+	        motionY *= 0.95F;
+	        motionZ *= 0.95F;
 	        
     	} else if (controlType == 1) {
     		double adjAngle = 20D;
@@ -128,8 +148,8 @@ public class ParticleMan {
     		double newX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
     		double newY = center.worldObj.isRemote ? center.posY - 1.68 : center.posY;
     		double newZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
-    		double vecX = newX - source.posX;
-    		double vecZ = newZ - source.posZ;
+    		double vecX = newX - posX;
+    		double vecZ = newZ - posZ;
     		
     		double angle = ((Math.atan2(vecZ, vecX) * 180D) / Math.PI);
     		angle += 20D;
@@ -140,19 +160,19 @@ public class ParticleMan {
     			angle += 5D;
     			speed -= (rand.nextFloat() * 0.02F);
     			speed *= 0.5F;
-    			if (source.getDistance(newX, newY, newZ) > 3F) {
+    			if (CoroUtilEntOrParticle.getDistance(source, newX, newY, newZ) > 3F) {
     				angle -= 10D;
     			}
     		} else {
     			
     			//angle -= 5D;
     			
-	    		if (source.getDistance(newX, newY, newZ) < 3F) {
+	    		if (CoroUtilEntOrParticle.getDistance(source, newX, newY, newZ) < 3F) {
 	    			speedThreshold = 0.2F;
 	    			//speed *= 0.5D;
-	    			source.motionX *= 0.89F;
-	    	        source.motionY *= 0.89F;
-	    	        source.motionZ *= 0.89F;
+	    			motionX *= 0.89F;
+	    	        motionY *= 0.89F;
+	    	        motionZ *= 0.89F;
 	    		} else {
 	    			angle -= 30D;
 	    		}
@@ -160,18 +180,18 @@ public class ParticleMan {
     		
     		speed += (rand.nextFloat() * 0.005F);
     		
-    		if (Math.sqrt(source.motionX * source.motionX + source.motionZ * source.motionZ) < speedThreshold) {
-	    		source.motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
+    		if (Math.sqrt(motionX * motionX + motionZ * motionZ) < speedThreshold) {
+	    		motionX -= Math.cos(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
 	    		//source.motionY += Math.sin((center.posY - source.posY * 0.01745329D)) * speed;
-	    		source.motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
+	    		motionZ += Math.sin(-angle * 0.01745329D - Math.PI) * speed * 1.5F;
     		} else {
-    			source.motionX *= 0.95F;
-    	        source.motionY *= 0.95F;
-    	        source.motionZ *= 0.95F;
+    			motionX *= 0.95F;
+    	        motionY *= 0.95F;
+    	        motionZ *= 0.95F;
     		}
 
-    		if (source.posY + 0.2D > newY + 0.2D) source.motionY -= /*rand.nextFloat() * */0.01F;
-    		if (source.posY - 0.2D < newY + 0.2D) source.motionY += /*rand.nextFloat() * */0.01F;
+    		if (posY + 0.2D > newY + 0.2D) motionY -= /*rand.nextFloat() * */0.01F;
+    		if (posY - 0.2D < newY + 0.2D) motionY += /*rand.nextFloat() * */0.01F;
     		
     	}
         
