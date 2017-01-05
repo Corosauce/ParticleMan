@@ -24,12 +24,13 @@ import particleman.entities.EntityParticleControllable;
 import particleman.items.ItemParticleGlove;
 
 
-@Mod(modid = "particleman", name="Particle Man", version="v1.0", dependencies="required-after:coroutil")
+@Mod(modid = "particleman", name="Particle Man", version=ParticleMan.version, dependencies="required-after:coroutil")
 public class ParticleMan {
 	
 	@Mod.Instance( value = "particleman" )
 	public static ParticleMan instance;
 	public static String modID = "particleman";
+	public static final String version = "${version}";
     
     /** For use in preInit ONLY */
     public Configuration config;
