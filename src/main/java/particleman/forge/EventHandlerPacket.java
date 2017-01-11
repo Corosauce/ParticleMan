@@ -37,31 +37,36 @@ public class EventHandlerPacket {
 	
 	@SubscribeEvent
 	public void onPacketFromClient(FMLNetworkEvent.ServerCustomPacketEvent event) {
-		EntityPlayerMP entP = ((NetHandlerPlayServer)event.getHandler()).playerEntity;
+		final EntityPlayerMP entP = ((NetHandlerPlayServer)event.getHandler()).playerEntity;
 		
 		try {
 			
 			ByteBuf buffer = event.getPacket().payload();
 			
 	        //if ("PMGloveCommand".equals(packet.channel)) {
-	        	int commandID = buffer.readInt();
-	        	int slotID = buffer.readInt();
-	        	
-	        	ItemStack is = entP.inventory.getStackInSlot(slotID);
-	        	
-	        	if (is != null && is.getItem() instanceof ItemParticleGlove) {
-	        		if (is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
-	        		if (commandID == 0) {
-	        			int fireMode = is.getTagCompound().getInteger("pm_fireMode") + 1;
-	        			if (fireMode >= 3) fireMode = 0;
-	        			is.getTagCompound().setInteger("pm_fireMode", fireMode);
-	        			
-		        	} else if (commandID == 1) {
-		        		((ItemParticleGlove)is.getItem()).createParticleFromInternal(entP, is, true, 5);
-		        	} else if (commandID == 2) {
-		        		((ItemParticleGlove)is.getItem()).shieldRetract(entP);
-		        	}
-	        	}
+			final int commandID = buffer.readInt();
+			final int slotID = buffer.readInt();
+
+				entP.mcServer.addScheduledTask(new Runnable() {
+					@Override
+					public void run() {
+						ItemStack is = entP.inventory.getStackInSlot(slotID);
+
+						if (is != null && is.getItem() instanceof ItemParticleGlove) {
+							if (is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
+							if (commandID == 0) {
+								int fireMode = is.getTagCompound().getInteger("pm_fireMode") + 1;
+								if (fireMode >= 3) fireMode = 0;
+								is.getTagCompound().setInteger("pm_fireMode", fireMode);
+
+							} else if (commandID == 1) {
+								((ItemParticleGlove)is.getItem()).createParticleFromInternal(entP, is, true, 5);
+							} else if (commandID == 2) {
+								((ItemParticleGlove)is.getItem()).shieldRetract(entP);
+							}
+						}
+					}});
+
 			//}
         	
 			
