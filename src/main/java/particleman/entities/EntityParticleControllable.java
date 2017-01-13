@@ -71,7 +71,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	}
 	
 	public EntityParticleControllable(World par1World, String parOwner, int parType) {
-		super(par1World);
+		this(par1World);
 		type = parType;
 		owner = parOwner;
 		if (type == 0) {

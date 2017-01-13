@@ -25,6 +25,7 @@ public class ClientTickHandler
     	if (mc != null && mc.thePlayer != null && (mc.currentScreen == null || debug))
         {
     		ItemStack is = mc.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+			ItemStack isOffhand = mc.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
     		
     		if (is != null && is.getItem() instanceof ItemParticleGlove && is.hasTagCompound()) {
     			int fireMode = is.getTagCompound().getInteger("pm_fireMode");

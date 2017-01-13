@@ -253,13 +253,14 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public EnumActionResult onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, BlockPos posHit, EnumHand hand, EnumFacing facing, float par8, float par9, float par10)
     {
-		if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
-		//if (!par3World.isRemote) {
+		if (hand == EnumHand.MAIN_HAND) {
+			if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
+			//if (!par3World.isRemote) {
 			if (par2EntityPlayer.getFoodStats().getFoodLevel() >= 6) {
 				check(CoroUtilEntity.getName(par2EntityPlayer));
 
-				/*Block id = par3World.getBlock(par4, par5, par6);
-				Block id2 = par3World.getBlock(par4, par5+1, par6);*/
+					/*Block id = par3World.getBlock(par4, par5, par6);
+					Block id2 = par3World.getBlock(par4, par5+1, par6);*/
 				BlockPos pos = posHit;//new BlockPos(par4, par5, par6);
 				BlockPos pos2 = posHit.add(0, 1, 0);//new BlockPos(par4, par5+1, par6);
 				IBlockState state = par3World.getBlockState(pos);
@@ -279,31 +280,32 @@ public class ItemParticleGlove extends Item {
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
 						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
 					}
-					
+
 					if (spawnType != -1) {
 						if (!par3World.isRemote) {
-							
+
 							int curAmount = par1ItemStack.getTagCompound().getInteger("pm_storage_" + spawnType);
-							
+
 							if (curAmount < maxStorage) {
 								par1ItemStack.getTagCompound().setInteger("pm_storage_" + spawnType, Math.min(curAmount + fillRate, maxStorage));
-								if (!par2EntityPlayer.capabilities.isCreativeMode) par2EntityPlayer.getFoodStats().addExhaustion(1F);
+								if (!par2EntityPlayer.capabilities.isCreativeMode)
+									par2EntityPlayer.getFoodStats().addExhaustion(1F);
 							}
-							
+
 							//check for max! (variable)
-							
+
 							//add to internal storage instead of spawning
-							
-							
-							/*EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, spawnType);
-							particle.setPosition(par4+0.5F, par5+0.6F, par6+0.5F);
-							particle.index = playerParticles.get(par2EntityPlayer.username).size();
-							playerParticles.get(par2EntityPlayer.username).add(particle);
-							par3World.spawnEntityInWorld(particle);*/
-							
-							
+
+
+								/*EntityParticleControllable particle = new EntityParticleControllable(par3World, par2EntityPlayer.username, spawnType);
+								particle.setPosition(par4+0.5F, par5+0.6F, par6+0.5F);
+								particle.index = playerParticles.get(par2EntityPlayer.username).size();
+								playerParticles.get(par2EntityPlayer.username).add(particle);
+								par3World.spawnEntityInWorld(particle);*/
+
+
 						}
-						
+
 						return EnumActionResult.SUCCESS;
 					} else {
 						onItemRightClick(par1ItemStack, par3World, par2EntityPlayer, EnumHand.MAIN_HAND);
@@ -312,11 +314,14 @@ public class ItemParticleGlove extends Item {
 				}
 			}
 			return EnumActionResult.FAIL;
-		//} else {
+			//} else {
 			//onItemRightClick(par1ItemStack, par3World, par2EntityPlayer);
-		//}
-		
-		//return true;
+			//}
+
+			//return true;
+		} else {
+			return EnumActionResult.PASS;
+		}
     }
 	
 	@Override
@@ -387,39 +392,42 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, EnumHand hand) {
 		if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
-		
-		if (!par2World.isRemote) {
-			check(CoroUtilEntity.getName(par3EntityPlayer));
-			if (par3EntityPlayer.isSneaking()) {
-				if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6) makeShockwave(par3EntityPlayer);
+
+		if (hand == EnumHand.MAIN_HAND) {
+			if (!par2World.isRemote) {
+				check(CoroUtilEntity.getName(par3EntityPlayer));
+				if (par3EntityPlayer.isSneaking()) {
+					if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6) makeShockwave(par3EntityPlayer);
+				} else {
+					int chargeAmount = 1;
+					//par1ItemStack.getTagCompound().setInteger("pm_shootType", );
+					//System.out.println("hand: " + hand);
+					createParticleFromInternal(par3EntityPlayer, par1ItemStack, false, chargeAmount);
+				}
 			} else {
-				int chargeAmount = 1;
-				//par1ItemStack.getTagCompound().setInteger("pm_shootType", );
-				createParticleFromInternal(par3EntityPlayer, par1ItemStack, false, chargeAmount);
-			}
-		} else {
-			//client side prediction, and client side movement for player
-			//int nextParticle = par1ItemStack.getTagCompound().getInteger("pm_nextParticleInList");
-			int fireMode = par1ItemStack.getTagCompound().getInteger("pm_fireMode");
-			if (fireMode == 2) {
-				int curAmount = par1ItemStack.getTagCompound().getInteger("pm_storage_" + fireMode);
-				if (curAmount > 0) {
-					if (par3EntityPlayer.isSneaking()) {
-						
-					} else {
-						float speed = 0.35F;
-						float look = 0F;
-				    	
-				    	double vecX = (double)(-Math.sin((par3EntityPlayer.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch+90F) / 180.0F * 3.1415927F));
-				    	double vecY = -Math.sin((par3EntityPlayer.rotationPitch+90F) / 180.0F * 3.1415927F);
-				    	double vecZ = (double)(Math.cos((par3EntityPlayer.rotationYaw+look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch+90F) / 180.0F * 3.1415927F));
-				        
-				    	//System.out.println("pitch: " + par3EntityPlayer.rotationPitch + " becomes: " + vecY);
-				    	
-				        //double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
-				    	par3EntityPlayer.motionX -= vecX * speed;
-				    	par3EntityPlayer.motionY -= vecY * speed;
-				    	par3EntityPlayer.motionZ -= vecZ * speed;
+				//client side prediction, and client side movement for player
+				//int nextParticle = par1ItemStack.getTagCompound().getInteger("pm_nextParticleInList");
+				int fireMode = par1ItemStack.getTagCompound().getInteger("pm_fireMode");
+				if (fireMode == 2) {
+					int curAmount = par1ItemStack.getTagCompound().getInteger("pm_storage_" + fireMode);
+					if (curAmount > 0) {
+						if (par3EntityPlayer.isSneaking()) {
+
+						} else {
+							float speed = 0.35F;
+							float look = 0F;
+
+							double vecX = (double) (-Math.sin((par3EntityPlayer.rotationYaw + look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F));
+							double vecY = -Math.sin((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F);
+							double vecZ = (double) (Math.cos((par3EntityPlayer.rotationYaw + look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F));
+
+							//System.out.println("pitch: " + par3EntityPlayer.rotationPitch + " becomes: " + vecY);
+
+							//double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+							par3EntityPlayer.motionX -= vecX * speed;
+							par3EntityPlayer.motionY -= vecY * speed;
+							par3EntityPlayer.motionZ -= vecZ * speed;
+						}
 					}
 				}
 			}
