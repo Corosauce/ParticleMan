@@ -476,7 +476,7 @@ public class ItemParticleGlove extends Item {
 		Entity center = par3Entity;
 		
 		double posX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
-		double posY = (center.posY - 0.3D - Math.sin((center.rotationPitch) / 180.0F * 3.1415927F) * dist);
+		double posY = (center.posY + 0.5D - Math.sin((center.rotationPitch) / 180.0F * 3.1415927F) * dist);
 		double posZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
 		
 		Random rand = new Random();
@@ -507,6 +507,7 @@ public class ItemParticleGlove extends Item {
 				//entFX = new EntityReddustFX(par2World, posX, posY, posZ, 1F, 1F, 0F, 0F);
 				int id = EnumParticleTypes.REDSTONE.getParticleID();
 				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
+				entFX.setRBGColorF(0.5F + (float)(Math.random() * 0.5F), 0, 0);
 			} else if (fireMode == 2) {
 				//entFX = new EntityReddustFX(par2World, posX, posY, posZ, 1F, 1F, 0F, 0F);
 				int id = EnumParticleTypes.REDSTONE.getParticleID();
