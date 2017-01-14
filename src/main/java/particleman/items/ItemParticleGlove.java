@@ -353,7 +353,13 @@ public class ItemParticleGlove extends Item {
 				NBTTagCompound plData = player.getEntityData();
 				
 				if (plData == null) plData = new NBTTagCompound();
-				
+
+				if (par5) {
+					player.capabilities.allowFlying = true;
+				} else {
+					player.capabilities.allowFlying = false;
+				}
+
 				if (player.isSneaking() && par5) {
 					if (playerWasSneaking.get(CoroUtilEntity.getName(player)) == 0) {
 						//System.out.println("mode toggle");
