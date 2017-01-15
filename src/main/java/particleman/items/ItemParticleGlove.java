@@ -356,8 +356,12 @@ public class ItemParticleGlove extends Item {
 
 				if (par5) {
 					player.capabilities.allowFlying = true;
+					par1ItemStack.getTagCompound().setBoolean("wasFlying", true);
 				} else {
-					player.capabilities.allowFlying = false;
+					if (par1ItemStack.getTagCompound().getBoolean("wasFlying")) {
+						player.capabilities.allowFlying = false;
+						par1ItemStack.getTagCompound().setBoolean("wasFlying", false);
+					}
 				}
 
 				if (player.isSneaking() && par5) {
