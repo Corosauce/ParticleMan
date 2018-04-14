@@ -68,7 +68,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	public EntityParticleControllable(World par1World) {
 		super(par1World);
 		
-		this.setSize(0.5F, 0.5F);
+		this.setSize(0.25F, 0.25F);
 	}
 	
 	public EntityParticleControllable(World par1World, String parOwner, int parType) {

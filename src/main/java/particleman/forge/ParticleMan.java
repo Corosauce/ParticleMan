@@ -221,7 +221,7 @@ public class ParticleMan {
         }
         catch (Exception e)
         {
-            System.out.println("Hostile Worlds has a problem loading it's configuration");
+            System.out.println("Particle Man has a problem loading it's configuration");
         }
         finally
         {

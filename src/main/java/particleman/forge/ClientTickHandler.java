@@ -32,6 +32,11 @@ public class ClientTickHandler
     			int val0 = is.getTagCompound().getInteger("pm_storage_0");
     			int val1 = is.getTagCompound().getInteger("pm_storage_1");
     			int val2 = is.getTagCompound().getInteger("pm_storage_2");
+
+    			//adjust the max from 300 to 1000
+				val0 /= 3.33333;
+				val1 /= 3.33333;
+				val2 /= 3.33333;
     			
     			ScaledResolution var8 = new ScaledResolution(mc/*, mc.displayWidth, mc.displayHeight*/);
     	        int width = var8.getScaledWidth();

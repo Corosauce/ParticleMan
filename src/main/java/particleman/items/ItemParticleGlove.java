@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,6 +31,8 @@ import particleman.forge.ParticleMan;
 import CoroUtil.util.CoroUtilBlock;
 import CoroUtil.util.CoroUtilEntity;
 import particleman.forge.SoundRegistry;
+
+import javax.annotation.Nullable;
 
 public class ItemParticleGlove extends Item {
 
@@ -54,9 +58,11 @@ public class ItemParticleGlove extends Item {
 	//public static HashMap<String, Integer> playerParticleMode = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerWasSneaking = new HashMap<String, Integer>();
 	
-	public static int fillRate = 5;
+	public static int fillRate = 15;
 	public static int depleteRate = 5;
-	public static int maxStorage = 300;
+	public static int maxStorage = 1000;
+
+	public static long client_selfPlayerLastFireTime;
 	
 	public ItemParticleGlove() {
 		super();
@@ -100,6 +106,8 @@ public class ItemParticleGlove extends Item {
 				if (fireMode == 2) deplete /= 3;
 				
 				item.getTagCompound().setInteger("pm_storage_" + fireMode, Math.max(curAmount - (deplete * createCount), 0));
+
+				boolean playedSound = false;
 				
 				for (int i = 0; i < createCount; i++) {
 					EntityParticleControllable particle = new EntityParticleControllable(player.world, CoroUtilEntity.getName(player), fireMode);
@@ -113,11 +121,17 @@ public class ItemParticleGlove extends Item {
 						playerParticles.get(CoroUtilEntity.getName(player)).add(particle);
 						particle.moveMode = 1;
 						//player.world.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":fire_shoot", 0.9F, player.world.rand.nextFloat());
-						player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("fire_shoot"), SoundCategory.PLAYERS, 0.9F, player.world.rand.nextFloat());
+						if (!playedSound) {
+							playedSound = true;
+							player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("fire_shoot"), SoundCategory.PLAYERS, 0.9F, player.world.rand.nextFloat());
+						}
 					} else {
 						fireParticle(player, particle);
 						//player.world.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.world.rand.nextFloat());
-						player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.world.rand.nextFloat());
+						if (!playedSound) {
+							playedSound = true;
+							player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.world.rand.nextFloat());
+						}
 					}
 				}
 			}
@@ -217,6 +231,9 @@ public class ItemParticleGlove extends Item {
 	
 	
 	public void makeShockwave(EntityPlayer player) {
+
+		float particleCount = playerParticles.get(CoroUtilEntity.getName(player)).size();
+
 		for (int i = 0; i < playerParticles.get(CoroUtilEntity.getName(player)).size(); i++) {
 			EntityParticleControllable particle = playerParticles.get(CoroUtilEntity.getName(player)).get(i);
 			if (particle.getDistanceToEntity(player) < 10D) {
@@ -237,10 +254,14 @@ public class ItemParticleGlove extends Item {
 				particle.motionZ += vecZ / dist2 * speed2;
 			}
 		}
-		
-		if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(3F);
+
+		if (particleCount > 3) {
+			if (!player.isCreative()) player.getFoodStats().addExhaustion(3F);
+		}
 		//player.world.playSoundEffect(player.posX, player.posY, player.posZ, ParticleMan.modID+":shockwave_echo_loud", 0.7F, 1F - (player.world.rand.nextFloat() * 0.2F));
-		player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("shockwave_echo_loud"), SoundCategory.PLAYERS, 0.7F, 1F - (player.world.rand.nextFloat() * 0.2F));
+		if (particleCount > 0) {
+			player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("shockwave_echo_loud"), SoundCategory.PLAYERS, 0.7F, 1F - (player.world.rand.nextFloat() * 0.2F));
+		}
 		
 		NBTTagCompound plData = player.getEntityData();
 		if (plData == null) plData = new NBTTagCompound();
@@ -267,6 +288,10 @@ public class ItemParticleGlove extends Item {
 				BlockPos pos2 = posHit.add(0, 1, 0);//new BlockPos(par4, par5+1, par6);
 				IBlockState state = par3World.getBlockState(pos);
 				IBlockState state2 = par3World.getBlockState(pos2);
+				IBlockState state3 = par3World.getBlockState(posHit.add(1, 0, 0));
+				IBlockState state4 = par3World.getBlockState(posHit.add(-1, 0, 0));
+				IBlockState state5 = par3World.getBlockState(posHit.add(0, 0, 1));
+				IBlockState state6 = par3World.getBlockState(posHit.add(0, 0, -1));
 				if (!CoroUtilBlock.isAir(state.getBlock())) {
 					int spawnType = -1;
 					if (state.getBlock() == Blocks.TORCH || state2.getBlock() == Blocks.FIRE) {
@@ -277,7 +302,12 @@ public class ItemParticleGlove extends Item {
 						spawnType = 1;
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
 						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
-					} else if (state2.getMaterial() == Material.WATER) {
+					} else if (state2.getMaterial() == Material.WATER ||
+							state3.getMaterial() == Material.WATER ||
+							state4.getMaterial() == Material.WATER ||
+							state5.getMaterial() == Material.WATER ||
+							state6.getMaterial() == Material.WATER
+							) {
 						spawnType = 2;
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":redstone_grab", 0.9F, par3World.rand.nextFloat());
 						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("redstone_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
@@ -290,7 +320,7 @@ public class ItemParticleGlove extends Item {
 
 							if (curAmount < maxStorage) {
 								par1ItemStack.getTagCompound().setInteger("pm_storage_" + spawnType, Math.min(curAmount + fillRate, maxStorage));
-								if (!par2EntityPlayer.capabilities.isCreativeMode)
+								if (!par2EntityPlayer.isCreative())
 									par2EntityPlayer.getFoodStats().addExhaustion(1F);
 							}
 
@@ -412,12 +442,17 @@ public class ItemParticleGlove extends Item {
 			if (!par2World.isRemote) {
 				check(CoroUtilEntity.getName(par3EntityPlayer));
 				if (par3EntityPlayer.isSneaking()) {
-					if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6) makeShockwave(par3EntityPlayer);
+					if (par3EntityPlayer.getFoodStats().getFoodLevel() >= 6 || par3EntityPlayer.isCreative()) makeShockwave(par3EntityPlayer);
 				} else {
 					int chargeAmount = 1;
-					//par1ItemStack.getTagCompound().setInteger("pm_shootType", );
-					//System.out.println("hand: " + hand);
-					createParticleFromInternal(par3EntityPlayer, par1ItemStack, false, chargeAmount);
+
+					//prevent right click spamming which could be used for fast flying
+					long delayBetweenShots = 3;
+					long lastShot = par1ItemStack.getTagCompound().getLong("lastShot");
+					if (par2World.getTotalWorldTime() > lastShot + delayBetweenShots) {
+						par1ItemStack.getTagCompound().setLong("lastShot", par2World.getTotalWorldTime());
+						createParticleFromInternal(par3EntityPlayer, par1ItemStack, false, chargeAmount);
+					}
 				}
 			} else {
 				//client side prediction, and client side movement for player
@@ -429,19 +464,29 @@ public class ItemParticleGlove extends Item {
 						if (par3EntityPlayer.isSneaking()) {
 
 						} else {
-							float speed = 0.35F;
-							float look = 0F;
 
-							double vecX = (double) (-Math.sin((par3EntityPlayer.rotationYaw + look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F));
-							double vecY = -Math.sin((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F);
-							double vecZ = (double) (Math.cos((par3EntityPlayer.rotationYaw + look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F));
+							long delayBetweenShots = 3;
+							long lastShot = client_selfPlayerLastFireTime;//par1ItemStack.getTagCompound().getLong("lastShot");
+							if (par2World.getTotalWorldTime() > lastShot + delayBetweenShots) {
+								client_selfPlayerLastFireTime = par2World.getTotalWorldTime();
+								//par1ItemStack.getTagCompound().setLong("lastShot", par2World.getTotalWorldTime());
 
-							//System.out.println("pitch: " + par3EntityPlayer.rotationPitch + " becomes: " + vecY);
+								float speed = 0.38F;
+								float look = 0F;
 
-							//double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
-							par3EntityPlayer.motionX -= vecX * speed;
-							par3EntityPlayer.motionY -= vecY * speed;
-							par3EntityPlayer.motionZ -= vecZ * speed;
+								double vecX = (double) (-Math.sin((par3EntityPlayer.rotationYaw + look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F));
+								double vecY = -Math.sin((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F);
+								double vecZ = (double) (Math.cos((par3EntityPlayer.rotationYaw + look) / 180.0F * 3.1415927F) * Math.cos((par3EntityPlayer.rotationPitch + 90F) / 180.0F * 3.1415927F));
+
+								//System.out.println("pitch: " + par3EntityPlayer.rotationPitch + " becomes: " + vecY);
+
+								//double var9 = (double)Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
+								par3EntityPlayer.motionX -= vecX * speed;
+								par3EntityPlayer.motionY -= vecY * speed;
+								par3EntityPlayer.motionZ -= vecZ * speed;
+							}
+
+
 						}
 					}
 				}
@@ -460,7 +505,7 @@ public class ItemParticleGlove extends Item {
 			if (curAmount > 0) {
 				stack.getTagCompound().setInteger("pm_storage_" + fireMode, Math.max(curAmount - depleteRate, 0));
 				Element.affectEntity(entity, player, fireMode);
-				if (!player.capabilities.isCreativeMode) player.getFoodStats().addExhaustion(1F);
+				if (!player.isCreative()) player.getFoodStats().addExhaustion(1F);
 				//player.world.playSoundEffect(player.posX, player.posY, player.posZ, /*particle.type == 0 ? "fire_shoot" : */ParticleMan.modID+":redstone_shoot", 0.9F, player.world.rand.nextFloat());
 				player.world.playSound(null, player.posX, player.posY, player.posZ, SoundRegistry.get("redstone_shoot"), SoundCategory.PLAYERS, 0.9F, player.world.rand.nextFloat());
 			}
@@ -538,4 +583,20 @@ public class ItemParticleGlove extends Item {
 		}
 	}
 
+	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+		return false;
+		//return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+
+		if (stack.getTagCompound() == null) stack.setTagCompound(new NBTTagCompound());
+
+		tooltip.add(TextFormatting.YELLOW + "Fire: " + stack.getTagCompound().getInteger("pm_storage_0") + " / " + maxStorage);
+		tooltip.add(TextFormatting.RED + "Redstone: " + stack.getTagCompound().getInteger("pm_storage_1") + " / " + maxStorage);
+		tooltip.add(TextFormatting.BLUE + "Water: " + stack.getTagCompound().getInteger("pm_storage_2") + " / " + maxStorage);
+	}
 }
