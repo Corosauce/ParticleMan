@@ -67,7 +67,7 @@ public class ParticleMan {
 
     	if (controlType == 0) {
 			float angle = (-center.rotationYaw + 65F/* + ((float)Math.sin(worldObj.getWorldTime() * 0.1F) * 3F)*/) * 0.01745329F;
-			float angle2 = (-center.rotationYaw + 65F + ((index*60) + world.getWorldTime() % 360)) * 0.01745329F;
+			float angle2 = (-center.rotationYaw + 65F + ((index*60) + world.getTotalWorldTime() % 360)) * 0.01745329F;
 			
 			float dist = distOffset;
 			
@@ -80,8 +80,8 @@ public class ParticleMan {
 			
 			float i = index; //use for particleindex, to offset position
 			
-			float range1 = (float) (Math.sin(((world.getWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
-	        float range2 = (float) (Math.cos(((world.getWorldTime() - (i*30.5F)) * (angleRateY * 0.01745329F))) * radius);
+			float range1 = (float) (Math.sin(((world.getTotalWorldTime() - (i*3.5F)) * angleRateRad)) * radius);
+	        float range2 = (float) (Math.cos(((world.getTotalWorldTime() - (i*30.5F)) * (angleRateY * 0.01745329F))) * radius);
 			
 	        /*source.posX = ;
 	        source.posY = ;
