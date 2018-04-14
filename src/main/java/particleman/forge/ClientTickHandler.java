@@ -22,7 +22,7 @@ public class ClientTickHandler
     	
     	boolean debug = false;
     	
-    	if (mc != null && mc.player != null && (mc.currentScreen == null || debug))
+    	if (mc != null && mc.player != null && !mc.gameSettings.hideGUI && (mc.currentScreen == null || debug))
         {
     		ItemStack is = mc.player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
 			ItemStack isOffhand = mc.player.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
