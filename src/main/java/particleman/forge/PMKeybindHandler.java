@@ -8,6 +8,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -82,10 +83,21 @@ public class PMKeybindHandler {
         	
         	if (mc != null && mc.player != null && mc.currentScreen == null)
             {
-        		ItemStack is = mc.player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+        		//ItemStack is = mc.player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+
+				ItemStack par1ItemStack = mc.player.getHeldItem(EnumHand.MAIN_HAND);
+				EnumHand handToUse = EnumHand.MAIN_HAND;
+				if (par1ItemStack.getItem() != ParticleMan.itemGlove && mc.player.getHeldItem(EnumHand.OFF_HAND).getItem() == ParticleMan.itemGlove) {
+					par1ItemStack = mc.player.getHeldItem(EnumHand.OFF_HAND);
+					handToUse = EnumHand.OFF_HAND;
+				}
         		
-        		if (is != null && is.getItem() instanceof ItemParticleGlove/* && is.hasTagCompound()*/) {
-        			sendPacket(commandID, mc.player.inventory.currentItem);
+        		if (!par1ItemStack.isEmpty() && par1ItemStack.getItem() instanceof ItemParticleGlove/* && is.hasTagCompound()*/) {
+					int slot = mc.player.inventory.currentItem;
+					if (handToUse == EnumHand.OFF_HAND) {
+						slot = -1;
+					}
+        			sendPacket(commandID, slot);
         		}
             }
     		

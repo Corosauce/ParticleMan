@@ -50,9 +50,14 @@ public class EventHandlerPacket {
 				entP.mcServer.addScheduledTask(new Runnable() {
 					@Override
 					public void run() {
-						ItemStack is = entP.inventory.getStackInSlot(slotID);
+						ItemStack is = null;
+						if (slotID == -1) {
+							is = entP.inventory.offHandInventory.get(0);
+						} else {
+							is = entP.inventory.getStackInSlot(slotID);
+						}
 
-						if (is != null && is.getItem() instanceof ItemParticleGlove) {
+						if (!is.isEmpty() && is.getItem() instanceof ItemParticleGlove) {
 							if (is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
 							if (commandID == 0) {
 								int fireMode = is.getTagCompound().getInteger("pm_fireMode") + 1;

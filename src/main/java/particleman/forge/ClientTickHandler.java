@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import particleman.items.ItemParticleGlove;
@@ -24,10 +25,12 @@ public class ClientTickHandler
     	
     	if (mc != null && mc.player != null && !mc.gameSettings.hideGUI && (mc.currentScreen == null || debug))
         {
-    		ItemStack is = mc.player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-			ItemStack isOffhand = mc.player.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+    		ItemStack is = mc.player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack isOffhand = mc.player.getHeldItem(EnumHand.OFF_HAND);
+
+			if (!(is.getItem() instanceof ItemParticleGlove)) is = isOffhand;
     		
-    		if (is != null && is.getItem() instanceof ItemParticleGlove && is.hasTagCompound()) {
+    		if (!is.isEmpty() && is.getItem() instanceof ItemParticleGlove && is.hasTagCompound()) {
     			int fireMode = is.getTagCompound().getInteger("pm_fireMode");
     			int val0 = is.getTagCompound().getInteger("pm_storage_0");
     			int val1 = is.getTagCompound().getInteger("pm_storage_1");

@@ -26,6 +26,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -233,7 +234,10 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead && (world.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
+	            if (var10 != null && !var10.isDead &&
+						(world.getEntityByID(ownerEntityID) != var10) &&
+						((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()) ||
+								(var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
 	            	if (!(var10 instanceof EntityAnimal) || ParticleMan.hurtAnimals) {
@@ -266,9 +270,15 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            	}
 	            	if (state == 0 && moveMode == 0) {
 	            		//ItemStack is = entP.getCurrentEquippedItem();
-						ItemStack is = entP.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+						ItemStack is = entP.getHeldItem(EnumHand.MAIN_HAND);
+
+						EnumHand handToUse = EnumHand.MAIN_HAND;
+						if (is.getItem() != ParticleMan.itemGlove && entP.getHeldItem(EnumHand.OFF_HAND).getItem() == ParticleMan.itemGlove) {
+							is = entP.getHeldItem(EnumHand.OFF_HAND);
+							handToUse = EnumHand.OFF_HAND;
+						}
 			        	
-			        	if (is != null && is.getItem() instanceof ItemParticleGlove) {
+			        	if (!is.isEmpty() && is.getItem() instanceof ItemParticleGlove) {
 			        		if (is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
 			        		int curAmount = is.getTagCompound().getInteger("pm_storage_" + type);
 							

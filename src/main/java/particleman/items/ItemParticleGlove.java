@@ -15,6 +15,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -275,8 +276,17 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer par2EntityPlayer, World par3World, BlockPos posHit, EnumHand hand, EnumFacing facing, float par8, float par9, float par10)
     {
-		if (hand == EnumHand.MAIN_HAND) {
-			ItemStack par1ItemStack = par2EntityPlayer.getHeldItemMainhand();
+
+    	boolean collected = false;
+
+		ItemStack par1ItemStack = par2EntityPlayer.getHeldItem(EnumHand.MAIN_HAND);
+		EnumHand handToUse = EnumHand.MAIN_HAND;
+		if (par1ItemStack.getItem() != ParticleMan.itemGlove && par2EntityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem() == ParticleMan.itemGlove) {
+			par1ItemStack = par2EntityPlayer.getHeldItem(EnumHand.OFF_HAND);
+			handToUse = EnumHand.OFF_HAND;
+		}
+
+		if (hand == handToUse) {
 			if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
 			//if (!par3World.isRemote) {
 			if (par2EntityPlayer.getFoodStats().getFoodLevel() >= 6 || par2EntityPlayer.isCreative()) {
@@ -294,7 +304,16 @@ public class ItemParticleGlove extends Item {
 				IBlockState state6 = par3World.getBlockState(posHit.add(0, 0, -1));
 				if (!CoroUtilBlock.isAir(state.getBlock())) {
 					int spawnType = -1;
-					if (state.getBlock() == Blocks.TORCH || state2.getBlock() == Blocks.FIRE) {
+					if (state.getBlock() == Blocks.TORCH || state2.getMaterial() == Material.FIRE ||
+							state3.getMaterial() == Material.FIRE ||
+							state4.getMaterial() == Material.FIRE ||
+							state5.getMaterial() == Material.FIRE ||
+							state6.getMaterial() == Material.FIRE ||
+							state2.getMaterial() == Material.LAVA ||
+							state3.getMaterial() == Material.LAVA ||
+							state4.getMaterial() == Material.LAVA ||
+							state5.getMaterial() == Material.LAVA ||
+							state6.getMaterial() == Material.LAVA) {
 						spawnType = 0;
 						//par3World.playSoundEffect(par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, ParticleMan.modID+":fire_grab", 0.9F, par3World.rand.nextFloat());
 						par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundRegistry.get("fire_grab"), SoundCategory.PLAYERS, 0.9F, par3World.rand.nextFloat());
@@ -340,8 +359,8 @@ public class ItemParticleGlove extends Item {
 
 						return EnumActionResult.SUCCESS;
 					} else {
-						onItemRightClick(par3World, par2EntityPlayer, EnumHand.MAIN_HAND);
-						return EnumActionResult.SUCCESS;
+						//onItemRightClick(par3World, par2EntityPlayer, EnumHand.MAIN_HAND);
+						return EnumActionResult.PASS;
 					}
 				}
 			}
@@ -422,7 +441,9 @@ public class ItemParticleGlove extends Item {
 				}
 			} else {
 				boolean charging = false;
-				if (par5) createParticleHandEffect(par1ItemStack, par2World, par3Entity, par4, par5, charging);
+				if (par5) {
+					createParticleHandEffect(par1ItemStack, par2World, par3Entity, par4, par5, charging);
+				}
 				if (par3Entity instanceof EntityPlayerSP) {
 					//((EntityPlayerSP)player).movementInput.moveStrafe *= 5;
 					//((EntityPlayerSP)player).movementInput.moveForward *= 5;
@@ -434,11 +455,16 @@ public class ItemParticleGlove extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World par2World, EntityPlayer par3EntityPlayer, EnumHand hand) {
 
-		ItemStack par1ItemStack = par3EntityPlayer.getHeldItemMainhand();
+		ItemStack par1ItemStack = par3EntityPlayer.getHeldItem(EnumHand.MAIN_HAND);
+		EnumHand handToUse = EnumHand.MAIN_HAND;
+		if (par1ItemStack.getItem() != ParticleMan.itemGlove && par3EntityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem() == ParticleMan.itemGlove) {
+			par1ItemStack = par3EntityPlayer.getHeldItem(EnumHand.OFF_HAND);
+			handToUse = EnumHand.OFF_HAND;
+		}
 
 		if (par1ItemStack.getTagCompound() == null) par1ItemStack.setTagCompound(new NBTTagCompound());
 
-		if (hand == EnumHand.MAIN_HAND) {
+		if (hand == handToUse) {
 			if (!par2World.isRemote) {
 				check(CoroUtilEntity.getName(par3EntityPlayer));
 				if (par3EntityPlayer.isSneaking()) {
@@ -529,6 +555,14 @@ public class ItemParticleGlove extends Item {
 	public void createParticleHandEffect(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5, boolean charging) {
 		double adjAngle = 30D;
 		double dist = 0.5D;
+
+		if (par3Entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) par3Entity;
+			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() != ParticleMan.itemGlove &&
+					player.getHeldItem(EnumHand.OFF_HAND).getItem() == ParticleMan.itemGlove) {
+				adjAngle += 90;
+			}
+		}
 		
 		//adjAngle = 0D;
 		//dist = 0D;
