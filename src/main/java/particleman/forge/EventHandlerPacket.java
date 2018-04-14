@@ -37,7 +37,7 @@ public class EventHandlerPacket {
 	
 	@SubscribeEvent
 	public void onPacketFromClient(FMLNetworkEvent.ServerCustomPacketEvent event) {
-		final EntityPlayerMP entP = ((NetHandlerPlayServer)event.getHandler()).playerEntity;
+		final EntityPlayerMP entP = ((NetHandlerPlayServer)event.getHandler()).player;
 		
 		try {
 			
@@ -79,7 +79,7 @@ public class EventHandlerPacket {
     
     @SideOnly(Side.CLIENT)
     public String getSelfUsername() {
-    	return CoroUtilEntity.getName(Minecraft.getMinecraft().thePlayer);
+    	return CoroUtilEntity.getName(Minecraft.getMinecraft().player);
     }
 	
 }

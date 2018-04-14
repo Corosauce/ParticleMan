@@ -80,12 +80,12 @@ public class PMKeybindHandler {
     	if (commandID != -1) {
     		Minecraft mc = FMLClientHandler.instance().getClient();
         	
-        	if (mc != null && mc.thePlayer != null && mc.currentScreen == null)
+        	if (mc != null && mc.player != null && mc.currentScreen == null)
             {
-        		ItemStack is = mc.thePlayer.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+        		ItemStack is = mc.player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
         		
         		if (is != null && is.getItem() instanceof ItemParticleGlove/* && is.hasTagCompound()*/) {
-        			sendPacket(commandID, mc.thePlayer.inventory.currentItem);
+        			sendPacket(commandID, mc.player.inventory.currentItem);
         		}
             }
     		

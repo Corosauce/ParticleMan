@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import particleman.entities.EntityParticleControllable;
 import particleman.items.ItemParticleGlove;
 
@@ -29,7 +30,7 @@ public class ParticleMan {
 	
 	@Mod.Instance( value = "particleman" )
 	public static ParticleMan instance;
-	public static String modID = "particleman";
+	public static final String modID = "particleman";
 	public static final String version = "${version}";
     
     /** For use in preInit ONLY */
@@ -40,7 +41,8 @@ public class ParticleMan {
     
     //Config
     public static boolean hurtAnimals = false;
-    
+
+	@GameRegistry.ObjectHolder(modID + ":" + "particleglove")
     public static Item itemGlove;
     
     public static String eventChannelName = "particleman";
@@ -53,7 +55,7 @@ public class ParticleMan {
     public static void spinAround(Object source, Entity center, float angleRate, float radius, float distOffset, int index, float speed, int controlType, int mode) {
     	Random rand = new Random();
 
-		World world = center.worldObj;
+		World world = center.world;
 
     	double motionX = CoroUtilEntOrParticle.getMotionX(source);
 		double motionY = CoroUtilEntOrParticle.getMotionY(source);
@@ -147,7 +149,7 @@ public class ParticleMan {
     		}
     		
     		double newX = (center.posX - Math.cos((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
-    		double newY = center.worldObj.isRemote ? center.posY - 1.68 : center.posY;
+    		double newY = center.world.isRemote ? center.posY - 1.68 : center.posY;
     		double newZ = (center.posZ + Math.sin((-center.rotationYaw + adjAngle) * 0.01745329D) * dist);
     		double vecX = newX - posX;
     		double vecZ = newZ - posZ;
@@ -239,7 +241,7 @@ public class ParticleMan {
     
     @Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		
+		proxy.postInit(this);
 	}
     
     @Mod.EventHandler

@@ -15,7 +15,7 @@ public class Element {
 		if (affecter instanceof EntityParticleControllable) {
 			EntityParticleControllable particle;
 			particle = (EntityParticleControllable)affecter;
-			source = particle.worldObj.getPlayerEntityByName(particle.owner);
+			source = particle.world.getPlayerEntityByName(particle.owner);
 			//type = particle.type;
 		} else if (affecter instanceof EntityPlayer) {
 			
@@ -54,7 +54,7 @@ public class Element {
     		affectee.attackEntityFrom(DamageSource.causeIndirectMagicDamage(affecter, source), damage);
     	} else if (type == 2) {
     		affectee.extinguish();
-    		affectee.attackEntityFrom(DamageSource.cactus, damage); //marking diff damage to boost it on worms side of code
+    		affectee.attackEntityFrom(DamageSource.CACTUS, damage); //marking diff damage to boost it on worms side of code
     		//affectee.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, worldObj.getPlayerEntityByName(owner)), 2);
     	}
     	

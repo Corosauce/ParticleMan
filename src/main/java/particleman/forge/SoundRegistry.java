@@ -3,6 +3,7 @@ package particleman.forge;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.HashMap;
@@ -22,8 +23,8 @@ public class SoundRegistry {
 
 	public static void register(String soundPath) {
 		ResourceLocation resLoc = new ResourceLocation(ParticleMan.modID, soundPath);
-		SoundEvent event = new SoundEvent(resLoc);
-		GameRegistry.register(event, resLoc);
+		SoundEvent event = new SoundEvent(resLoc).setRegistryName(resLoc);
+		ForgeRegistries.SOUND_EVENTS.register(event);
 		if (lookupStringToEvent.containsKey(soundPath)) {
 			System.out.println("PARTICLEMAN SOUNDS WARNING: duplicate sound registration for " + soundPath);
 		}

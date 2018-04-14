@@ -3,6 +3,7 @@ package particleman.forge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,17 +41,14 @@ public class ClientProxy extends CommonProxy
     @Override
     public void registerItemVariantModel(Item item, String name, int metadata) {
         if (item != null) {
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, metadata, new ModelResourceLocation(ParticleMan.modID + ":" + name, "inventory"));
+            ModelLoader.setCustomModelResourceLocation(item, metadata, new ModelResourceLocation(ParticleMan.modID + ":" + name, "inventory"));
         }
     }
 
     @Override
     public void registerItemVariantModel(Item item, String registryName, int metadata, String variantName) {
         if (item != null) {
-            //old preinit only way
-            // ModelLoader.setCustomModelResourceLocation(item, metadata, mrl);
-            //this method works via init, ModelLoader does not, requires being in preinit
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, metadata, new ModelResourceLocation(ParticleMan.modID + ":" + variantName, null));
+            ModelLoader.setCustomModelResourceLocation(item, metadata, new ModelResourceLocation(ParticleMan.modID + ":" + variantName, "inventory"));
         }
     }
     

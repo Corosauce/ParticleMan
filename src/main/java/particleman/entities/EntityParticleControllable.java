@@ -13,6 +13,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFlame;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -110,7 +111,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		isImmuneToFire = true;
 		
 		//Server logic
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 
 			decayTime++;
 			
@@ -131,24 +132,24 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 			manageParticles();
 			
 		}
-		if (worldObj.isRemote) {
+		if (world.isRemote) {
             state = this.getDataManager().get(DP_STATE);
 		} else {
             this.getDataManager().set(DP_STATE, state);
 		}
-		if (!worldObj.isRemote) {
+		if (!world.isRemote) {
 			if (state == 0) {
 				EntityPlayer player = null;
-				if (worldObj.playerEntities.size() > 0) {
-					player = worldObj.getPlayerEntityByName(owner);
+				if (world.playerEntities.size() > 0) {
+					player = world.getPlayerEntityByName(owner);
 				}
 				if (player != null) {
 					lastMode = player.getEntityData().getInteger("particleMode");
-					/*if (worldObj.isRemote) {
+					/*if (world.isRemote) {
 						System.out.println(player.getEntityData().getInteger("particleMode"));
 					}*/
 					//this nbt lookup doesnt work (for client)
-					/*if (worldObj.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1, moveMode);
+					/*if (world.isRemote) */ParticleMan.spinAround(this, player, 10F, 0.5F, 2F, index, 0.02F, 1, moveMode);
 					
 					if (player.getDistanceToEntity(this) > 15) {
 						awayFromOwnerTicks++;
@@ -162,14 +163,14 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 					}
 					
 				} else if (ownerEntityID != -1) {
-					Entity ent = worldObj.getEntityByID(ownerEntityID);
+					Entity ent = world.getEntityByID(ownerEntityID);
 					if (ent != null) {
 						ParticleMan.spinAround(this, ent, 10F, 0.5F, 2F, index, 0.02F, 1, 1);
 					}
 				}
 				
 			} else {
-				if (!worldObj.isRemote) {
+				if (!world.isRemote) {
 					if (regrabDelay++ > regrabDelayMax) {
 						regrabDelay = 0;
 						state = 0;
@@ -195,25 +196,25 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         
         //this.onGround = false;
         
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
         	if (isInWater()) {
 	        	if (type == 0) {
 	        		setDead();
-	        		//worldObj.playSoundEffect(posX, posY, posZ, "random.fizz", 0.5F, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
-					worldObj.playSound(posX, posY, posZ, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.AMBIENT, 0.5F, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F, false);
+	        		//world.playSoundEffect(posX, posY, posZ, "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+					world.playSound(posX, posY, posZ, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.AMBIENT, 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F, false);
 	        	}
         	}
         	
-        	//Block id = worldObj.getBlock((int)posX, (int)posY, (int)posZ);
+        	//Block id = world.getBlock((int)posX, (int)posY, (int)posZ);
 			BlockPos pos = new BlockPos(posX, posY, posZ);
-			IBlockState state = worldObj.getBlockState(pos);
+			IBlockState state = world.getBlockState(pos);
         	
         	if (type == 2) {
         		if (state.getBlock() == Blocks.FIRE) {
-            		//worldObj.setBlock((int)posX, (int)posY, (int)posZ, Blocks.AIR);
-					worldObj.setBlockState(pos, Blocks.AIR.getDefaultState());
+            		//world.setBlock((int)posX, (int)posY, (int)posZ, Blocks.AIR);
+					world.setBlockState(pos, Blocks.AIR.getDefaultState());
             		health--;
             	}
         	}
@@ -224,15 +225,15 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         
         
         
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
         	double size = 0.5D;
-	        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(size, size, size));
+	        List entities = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(size, size, size));
 	        
 	        for (int i = 0; entities != null && i < entities.size(); ++i)
 	        {
 	            Entity var10 = (Entity)entities.get(i);
 	            
-	            if (var10 != null && !var10.isDead && (worldObj.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
+	            if (var10 != null && !var10.isDead && (world.getEntityByID(ownerEntityID) != var10) && ((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()) || (var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
 	            	if (!(var10 instanceof EntityAnimal) || ParticleMan.hurtAnimals) {
@@ -286,7 +287,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            
 	        }
         }
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
 	        if (health <= 0) {
 	    		setDead();
 	    	}
@@ -308,17 +309,17 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 		
 		if (particles.size() < 15) {
 			if (type == 0) {
-				//entFX = new ParticleFlame(worldObj, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
+				//entFX = new ParticleFlame(world, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
 				int id = EnumParticleTypes.FLAME.getParticleID();
 				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed, (rand.nextFloat()-rand.nextFloat()) * speed);
 
 			} else if (type == 1) {
-				//entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				//entFX = new EntityReddustFX(world, posX, posY, posZ, 1F, 1F, 0F, 0F);
 				int id = EnumParticleTypes.REDSTONE.getParticleID();
 				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
 				entFX.setRBGColorF(0.5F + (float)(Math.random() * 0.5F), 0, 0);
 			} else if (type == 2) {
-				//entFX = new EntityReddustFX(worldObj, posX, posY, posZ, 1F, 1F, 0F, 0F);
+				//entFX = new EntityReddustFX(world, posX, posY, posZ, 1F, 1F, 0F, 0F);
 				int id = EnumParticleTypes.REDSTONE.getParticleID();
 				entFX = mc.effectRenderer.spawnEffectParticle(id, posX, posY, posZ, 1F, 1F, 0F);
 				entFX.setRBGColorF(0, 0, 0.5F + (float)(Math.random() * 0.5F));
