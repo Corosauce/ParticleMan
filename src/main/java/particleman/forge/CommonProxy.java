@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import particleman.entities.EntityParticleControllable;
 import particleman.items.ItemParticleGlove;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = ParticleMan.modID)
 public class CommonProxy implements IGuiHandler
 {
     public World mainWorld;
