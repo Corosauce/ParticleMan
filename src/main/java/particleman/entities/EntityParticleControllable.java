@@ -228,7 +228,7 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
         
         if (!world.isRemote) {
         	double size = 0.5D;
-	        List entities = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(size, size, size));
+	        List entities = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(size, size, size));
 	        
 	        for (int i = 0; entities != null && i < entities.size(); ++i)
 	        {
