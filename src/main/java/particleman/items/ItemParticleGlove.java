@@ -473,7 +473,7 @@ public class ItemParticleGlove extends Item {
 					int chargeAmount = 1;
 
 					//prevent right click spamming which could be used for fast flying
-					long delayBetweenShots = 3;
+					long delayBetweenShots = 2;
 					long lastShot = par1ItemStack.getTagCompound().getLong("lastShot");
 					if (par2World.getTotalWorldTime() > lastShot + delayBetweenShots) {
 						par1ItemStack.getTagCompound().setLong("lastShot", par2World.getTotalWorldTime());
