@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import CoroUtil.util.CoroUtilEntOrParticle;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
@@ -41,6 +40,7 @@ public class ParticleMan {
     
     //Config
     public static boolean hurtAnimals = false;
+	public static boolean hurtPlayersIfPVPOn = false;
 
 	@GameRegistry.ObjectHolder(modID + ":" + "particleglove")
     public static Item itemGlove;
@@ -217,6 +217,7 @@ public class ParticleMan {
         	config.load();
         	//itemIDStart = config.get(Configuration.CATEGORY_BLOCK, "itemIDStart", itemIDStart).getInt(itemIDStart);
         	hurtAnimals = config.get(Configuration.CATEGORY_GENERAL, "hurtAnimals", false).getBoolean(false);
+			hurtPlayersIfPVPOn = config.get(Configuration.CATEGORY_GENERAL, "hurtPlayersIfPVPOn", true).getBoolean(true);
             
         }
         catch (Exception e)

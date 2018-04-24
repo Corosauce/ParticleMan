@@ -6,26 +6,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFlame;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -236,7 +231,8 @@ public class EntityParticleControllable extends Entity implements IEntityAdditio
 	            
 	            if (var10 != null && !var10.isDead &&
 						(world.getEntityByID(ownerEntityID) != var10) &&
-						((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled()) ||
+						((var10 instanceof EntityPlayer && !CoroUtilEntity.getName(var10).equals(owner) &&
+								ParticleMan.hurtPlayersIfPVPOn && FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled() ) ||
 								(var10 instanceof EntityLivingBase && ((EntityLivingBase)var10).getHealth() > 0 && !(var10 instanceof EntityPlayer || owner.equals(""))))) {
 	            	Random rand = new Random();
 	            	
